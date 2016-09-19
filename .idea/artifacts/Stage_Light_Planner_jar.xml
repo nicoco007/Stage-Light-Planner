@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Stage-Light-Planner:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Stage_Light_Planner_jar</output-path>
+    <root id="archive" name="Stage-Light-Planner.jar">
+      <element id="module-output" name="Stage-Light-Planner" />
+    </root>
+  </artifact>
+</component>
