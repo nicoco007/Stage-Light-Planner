@@ -1,8 +1,8 @@
 package com.nicolasgnyra.stagelightplanner.components;
 
+import com.nicolasgnyra.stagelightplanner.FormElement;
 import com.nicolasgnyra.stagelightplanner.JComboBoxItem;
 import com.nicolasgnyra.stagelightplanner.helpers.GridBagLayoutHelper;
-import com.nicolasgnyra.stagelightplanner.helpers.SpringHelper;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -13,6 +13,7 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.util.function.Consumer;
 
+@SuppressWarnings("Convert2Diamond")
 public class JForm extends JPanel {
     public JForm() {
         super(new GridBagLayout());
@@ -22,16 +23,18 @@ public class JForm extends JPanel {
         return getComponentCount() / 2;
     }
 
-    private void addLabel(String text) {
-        add(new JLabel(text, JLabel.LEADING), GridBagLayoutHelper.getGridBagLayoutConstraints(0, getRow(), GridBagConstraints.EAST, 1, 1, 0, 0, false, false, new Insets(5, 5, 5, 5)));
+    private JLabel addLabel(String text) {
+        JLabel label = new JLabel(text, JLabel.LEADING);
+        add(label, GridBagLayoutHelper.getGridBagLayoutConstraints(0, getRow(), GridBagConstraints.EAST, 1, 1, 0, 0, false, false, new Insets(5, 5, 5, 5)));
+        return label;
     }
 
     public void addTextField(String label, String value, Consumer<String> onUpdate) {
         addTextField(label, value, onUpdate, false);
     }
 
-    public void addTextField(String label, String value, Consumer<String> onUpdate, boolean multiline) {
-        addLabel(label);
+    public FormElement<JTextComponent> addTextField(String text, String value, Consumer<String> onUpdate, boolean multiline) {
+        JLabel label = addLabel(text);
 
         JTextComponent input;
 
@@ -81,67 +84,97 @@ public class JForm extends JPanel {
         });
 
         revalidate();
+
+        return new FormElement<JTextComponent>(label, input);
     }
 
-    public void addNumberField(String label, double value, Consumer<Double> onUpdate, double min, double max, double step, int decimalPlaces) {
-        addLabel(label);
+    public FormElement<JSpinner> addNumberField(String text, double value, Consumer<Double> onUpdate, double min, double max, double step, int decimalPlaces) {
+        JLabel label = addLabel(text);
 
-        JSpinner input = new JSpinner(new SpinnerNumberModel(value, min, max, step));
+        final JSpinner spinner = new JSpinner(new SpinnerNumberModel(value, min, max, step));
 
         if (decimalPlaces > 0) {
-            JSpinner.NumberEditor numberEditor = new JSpinner.NumberEditor(input, "0." + new String(new char[decimalPlaces]).replace('\0', '0'));
+            JSpinner.NumberEditor numberEditor = new JSpinner.NumberEditor(spinner, "0." + new String(new char[decimalPlaces]).replace('\0', '0'));
             numberEditor.getTextField().setColumns(6);
-            input.setEditor(numberEditor);
+            spinner.setEditor(numberEditor);
         }
 
-        add(input, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
+        add(spinner, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
-        input.addChangeListener((e) -> onUpdate.accept((double)input.getValue()));
-
-        revalidate();
-    }
-
-    public void addColorField(String label, Color color, Consumer<Color> onUpdate) {
-        addLabel(label);
-
-        JColorChooserButton input = new JColorChooserButton(color);
-
-        add(input, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
-
-        input.addColorChangedListener(onUpdate::accept);
+        spinner.addChangeListener((e) -> onUpdate.accept(((Number)spinner.getValue()).doubleValue()));
 
         revalidate();
+
+        return new FormElement<JSpinner>(label, spinner);
     }
 
-    public <T> void addComboBoxField(String label, String[] labels, T[] values, T selectedValue, Consumer<T> onUpdate) {
+    public FormElement<JColorChooserButton> addColorField(String text, Color color, Consumer<Color> onUpdate) {
+        JLabel label = addLabel(text);
+
+        final JColorChooserButton colorChooser = new JColorChooserButton(color);
+
+        add(colorChooser, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
+
+        colorChooser.addColorChangedListener(onUpdate::accept);
+
+        revalidate();
+
+        return new FormElement<JColorChooserButton>(label, colorChooser);
+    }
+
+    public <T> FormElement<JComboBox<JComboBoxItem<T>>> addComboBoxField(String text, String[] labels, T[] values, T selectedValue, Consumer<T> onUpdate) {
         if (labels.length != values.length)
             throw new IllegalArgumentException("Both arrays must have the same amount of items.");
 
-        addLabel(label);
+        JLabel label = addLabel(text);
 
-        JComboBox<JComboBoxItem> input = new JComboBox<>();
+        final JComboBox<JComboBoxItem<T>> comboBox = new JComboBox<>();
 
         for (int i = 0; i < values.length; i++) {
-            input.addItem(new JComboBoxItem<>(labels[i], values[i]));
+            comboBox.addItem(new JComboBoxItem<>(labels[i], values[i]));
 
             if (values[i].equals(selectedValue))
-                input.setSelectedIndex(i);
+                comboBox.setSelectedIndex(i);
         }
 
-        input.setPrototypeDisplayValue(new JComboBoxItem("", values[0]));
+        comboBox.setPrototypeDisplayValue(new JComboBoxItem<>("", values[0]));
 
-        add(input, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
+        add(comboBox, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
-        input.addActionListener(e -> {
+        comboBox.addActionListener(e -> {
             @SuppressWarnings("unchecked")
-            T value = ((JComboBoxItem<T>)input.getSelectedItem()).getValue();
+            T value = ((JComboBoxItem<T>)comboBox.getSelectedItem()).getValue();
             onUpdate.accept(value);
         });
 
         revalidate();
+
+        return new FormElement<JComboBox<JComboBoxItem<T>>>(label, comboBox);
+    }
+
+    public FormElement<JCheckBox> addCheckBox(String text, boolean value, Consumer<Boolean> onUpdate) {
+        JLabel label = addLabel("");
+
+        final JCheckBox checkBox = new JCheckBox(text, value);
+
+        checkBox.addActionListener(e -> {
+            onUpdate.accept(checkBox.isSelected());
+        });
+
+        add(checkBox, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
+
+        revalidate();
+
+        return new FormElement<JCheckBox>(label, checkBox);
     }
 
     public void addVerticalGlue() {
         GridBagLayoutHelper.addVerticalGlue(this, getRow());
+    }
+
+    public void empty() {
+        removeAll();
+        revalidate();
+        repaint();
     }
 }

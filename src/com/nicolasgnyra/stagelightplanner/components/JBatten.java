@@ -23,18 +23,14 @@ public class JBatten extends JStageElement implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
-
-        if (SwingUtilities.isRightMouseButton(e))
-            swapOrientation();
     }
 
     public Orientation getOrientation() {
         return orientation;
     }
 
-    private void swapOrientation() {
-        orientation = orientation == Orientation.HORIZONTAL ? Orientation.VERTICAL : Orientation.HORIZONTAL;
-
+    void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
         repaint();
     }
 

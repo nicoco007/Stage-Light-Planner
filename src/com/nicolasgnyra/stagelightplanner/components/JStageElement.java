@@ -64,16 +64,18 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         super.setLocation((int)((boundX / parent.getCellSize()) * parent.getCellSize() * parent.getZoom()), (int)(boundY / parent.getCellSize() * parent.getCellSize() * parent.getZoom()));
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
+    void reposition() {
         setSize(width, height);
         setLocation(x, y);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        reposition();
 
         super.paintComponent(g);
 
         paintElement(g);
-
-        parent.repaint();
     }
 
     public void requestInnerFocus() {
@@ -198,7 +200,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         return y;
     }
 
-    public boolean hasInnerFocus() {
+    boolean hasInnerFocus() {
         return focus;
     }
 }

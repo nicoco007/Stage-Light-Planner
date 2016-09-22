@@ -9,7 +9,6 @@ import com.nicolasgnyra.stagelightplanner.exceptions.InvalidFileVersionException
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 
 public class FileHelper {
@@ -200,6 +199,7 @@ public class FileHelper {
                     break;
                 case STAGE_ELEMENT_LIGHT:
                     LightDefinition lightDefinition = lightDefinitions.get(reader.readInt());
+
                     float fieldAngle = reader.readFloat();
                     Color beamColor = new Color(reader.readByte() & 0xFF, reader.readByte() & 0xFF, reader.readByte() & 0xFF);
                     float rotation = reader.readFloat();

@@ -1,6 +1,7 @@
 package com.nicolasgnyra.stagelightplanner.components;
 
 import com.nicolasgnyra.stagelightplanner.ConnectionType;
+import com.nicolasgnyra.stagelightplanner.Orientation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -62,8 +63,9 @@ public class JPropertiesContainer extends JPanel {
 
     private void showBattenProperties(final JBatten batten) {
         setTitle("Batten", new String[0]);
-        propertiesPanel.addNumberField("Height (meters):", batten.getHeightFromFloor() / 100f, value -> batten.setHeightFromFloor((int)(value * 100)), 1, 50, 0.5, 2);
-        propertiesPanel.addNumberField("Length (meters):", batten.getLength() / 100f, value -> batten.setLength((int)(value * 100)), 0.20, 100, 0.20, 2);
+        propertiesPanel.<Double>addNumberField("Height (meters):", batten.getHeightFromFloor() / 100f, value -> batten.setHeightFromFloor((int)(value * 100)), 1, 50, 0.5, 2);
+        propertiesPanel.<Double>addNumberField("Length (meters):", batten.getLength() / 100f, value -> batten.setLength((int)(value * 100)), 0.20, 100, 0.20, 2);
+        propertiesPanel.addComboBoxField("Orientation:", new String[] { "Horizontal", "Vertical" }, new Orientation[] { Orientation.HORIZONTAL, Orientation.VERTICAL }, batten.getOrientation(), batten::setOrientation);
     }
 
     private void showLightProperties(final JLight light) {
@@ -71,8 +73,8 @@ public class JPropertiesContainer extends JPanel {
         propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation((int)((double)value)), -360.00, 360.00, 11.25, 2);
         propertiesPanel.addNumberField("Angle (degrees):", light.getAngle(), value -> light.setAngle((float)((double)value)), (int)(light.getFieldAngle() / 2 - 90), (int)(90 - light.getFieldAngle() / 2), 11.25, 2);
 
-        if (light.getModel().getFieldAngle() == 0) {
-            propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle((float)((double)value)), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 1.0f, 1);
+        if (light.getModel().getFieldAngle() == 0 && light.getModel().getFieldAngleMin() <= light.getModel().getFieldAngleMax()) {
+            propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle((float)((double)value)), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 0.1, 1);
         }
 
         propertiesPanel.addColorField("Beam Color:", light.getBeamColor(), light::setBeamColor);

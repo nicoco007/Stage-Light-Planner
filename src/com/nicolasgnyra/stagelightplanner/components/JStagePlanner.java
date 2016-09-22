@@ -63,29 +63,32 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         bottomToolbar.add(Box.createHorizontalGlue());
 
         String[] zoomChoices = {
-                "50.0%",
-                "100.0%",
-                "200.0%",
-                "300.0%",
-                "400.0%"
+                "50%",
+                "100%",
+                "200%",
+                "300%",
+                "400%"
         };
 
-        JComboBox<String> zoomComboBox = new JComboBox<>(zoomChoices);
+        final JComboBox<String> zoomComboBox = new JComboBox<>(zoomChoices);
         zoomComboBox.setEditable(true);
         zoomComboBox.addActionListener((e) -> {
-            JComboBox source = (JComboBox)e.getSource();
-            String selection = (String)source.getSelectedItem();
+            String selection = (String)zoomComboBox.getSelectedItem();
 
             Pattern pattern = Pattern.compile("^([0-9.]+)%?$");
             Matcher matcher = pattern.matcher(selection);
 
             if (matcher.matches()) {
                 zoom = Math.max(minZoom, Math.min(Float.parseFloat(matcher.group(1)) / 100f, maxZoom));
-                drawingPane.revalidate();
                 drawingPane.repaint();
+                revalidate();
+                repaint();
+
+                for (Component comp : drawingPane.getComponents())
+                    comp.repaint();
             }
 
-            source.setSelectedItem(Math.round(zoom * 100) + "%");
+            zoomComboBox.setSelectedItem(Math.round(zoom * 100) + "%");
         });
 
         zoomComboBox.setSelectedItem(zoom * 100 + "%");
@@ -223,7 +226,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
             int y = (int)(dragLocation.y / zoom);
 
             if (data instanceof LightDefinition) {
-                addFixture(new JLight(x, y, (LightDefinition)data));
+                addFixture(new JLight(x, y, ((LightDefinition)data).clone()));
             } else if (data instanceof String) {
                 addLabel(new JDraggableLabel(x, y, "Text"));
             } else {
@@ -294,35 +297,14 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 return;
             }
 
-            // set size
-            setPreferredSize(size);
-
-            // call super method
-            super.paintComponent(g);
-
-            // set color to light gray
-            g.setColor(Color.lightGray);
-
-            // draw small cells
-            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
-                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
-                    g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
-
-            // set color to darker gray
-            g.setColor(Color.gray);
-
-            // draw large cells
-            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom) * largeCellMultiplier)
-                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom) * largeCellMultiplier)
-                    g.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
-
-            getFixtures().forEach((fixture) -> {
+            getFixtures().forEach(fixture -> {
                 if (fixture instanceof JLight) {
                     // get batten on top of which the light currently is
                     JBatten overlappingBatten = ((JLight)fixture).getOverlappingBatten();
 
                     // if the batten was found
                     if (overlappingBatten != null) {
+
                         // cast fixture to light
                         JLight light = (JLight)fixture;
 
@@ -396,11 +378,42 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
                         // restore anti-aliasing setting to default
                         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+
                     }
+
+                    // reposition before repainting
+                    // this is necessary because Swing only repaints "visible" components, and if the position is not
+                    // set correctly, the component will be outside the viewport.
+                    fixture.reposition();
+
+                    // repaint the component
+                    fixture.repaint();
 
                 }
 
             });
+
+            // set size
+            setPreferredSize(size);
+
+            // call super method
+            super.paintComponent(g);
+
+            // set color to light gray
+            g.setColor(Color.lightGray);
+
+            // draw small cells
+            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
+                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
+                    g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
+
+            // set color to darker gray
+            g.setColor(Color.gray);
+
+            // draw large cells
+            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom) * largeCellMultiplier)
+                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom) * largeCellMultiplier)
+                    g.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
 
             // revalidate to update scrollbars
             revalidate();
@@ -408,7 +421,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         }
     }
 
-    ArrayList<JStageElement> getStageElements() {
+    private ArrayList<JStageElement> getStageElements() {
         ArrayList<JStageElement> stageElements = new ArrayList<>();
 
         for (Component comp : drawingPane.getComponents())
@@ -418,7 +431,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         return stageElements;
     }
 
-    ArrayList<JFixture> getFixtures() {
+    private ArrayList<JFixture> getFixtures() {
         ArrayList<JFixture> fixtures = new ArrayList<>();
 
         for (Component comp : drawingPane.getComponents())

@@ -1,8 +1,10 @@
 package com.nicolasgnyra.stagelightplanner;
 
+import javafx.scene.effect.Light;
+
 import java.awt.*;
 
-public class LightDefinition extends FixtureDefinition {
+public class LightDefinition extends FixtureDefinition implements Cloneable {
     private String displayName  = "";
     private String label        = "";
     private LightShape shape    = LightShape.SQUARE;
@@ -50,24 +52,55 @@ public class LightDefinition extends FixtureDefinition {
         return shape;
     }
 
+    public void setShape(LightShape shape) {
+        this.shape = shape;
+    }
+
     public Color getDisplayColor() {
         return displayColor;
+    }
+
+    public void setDisplayColor(Color displayColor) {
+        this.displayColor = displayColor;
     }
 
     public float getFieldAngle() {
         return fieldAngle;
     }
 
+    public void setFieldAngle(float fieldAngle) {
+        this.fieldAngle = fieldAngle;
+    }
+
     public float getFieldAngleMin() {
         return fieldAngleMin;
+    }
+
+    public void setFieldAngleMin(float fieldAngleMin) {
+        this.fieldAngleMin = fieldAngleMin;
     }
 
     public float getFieldAngleMax() {
         return fieldAngleMax;
     }
 
+    public void setFieldAngleMax(float fieldAngleMax) {
+        this.fieldAngleMax = fieldAngleMax;
+    }
+
     @Override
     public String toString() {
         return String.format("%s[displayName=%s,label=%s,displayColor=%s,fieldAngle=%f,fieldAngleMin=%f,fieldAngleMax=%f]", getClass().getCanonicalName(), displayName, label, displayColor, fieldAngle, fieldAngleMin, fieldAngleMax);
+    }
+
+    @Override
+    public LightDefinition clone() {
+        try {
+            return (LightDefinition) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return this;
     }
 }
