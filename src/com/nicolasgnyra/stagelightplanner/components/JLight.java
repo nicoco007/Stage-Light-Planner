@@ -11,7 +11,6 @@ public class JLight extends JFixture {
     private float angle;
     private float fieldAngle;
     private Color beamColor;
-    private ConnectionType connectionType;
     private String connectionId;
 
     JLight(int x, int y, LightDefinition model) {
@@ -19,17 +18,16 @@ public class JLight extends JFixture {
     }
 
     public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle) {
-        this(x, y, model, beamColor, rotation, angle, model.getFieldAngle() > 0 ? model.getFieldAngle() : model.getFieldAngleMax(), ConnectionType.DMX, "");
+        this(x, y, model, beamColor, rotation, angle, model.getFieldAngle() > 0 ? model.getFieldAngle() : model.getFieldAngleMax(), "");
     }
 
-    public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle, float fieldAngle, ConnectionType connectionType, String connectionId) {
+    public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle, float fieldAngle, String connectionId) {
         super(x, y, 30, 30, model.getDisplayColor());
         this.model = model;
         this.beamColor = beamColor;
         this.rotation = rotation;
         this.angle = angle;
         this.fieldAngle = fieldAngle;
-        this.connectionType = connectionType;
         this.connectionId = connectionId;
     }
 
@@ -54,13 +52,18 @@ public class JLight extends JFixture {
 
         if (getOverlappingBatten() != null) {
             g2d.setColor(color);
-            setToolTipText(null);
+            setToolTipText("<html><p>" + model.getDisplayName() + "</p><p>Field angle: " + getFieldAngle() + "°</p><p>Connection: " + getConnectionId() + "</p></html>");
         } else {
             g2d.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 128));
             setToolTipText("Place this light on a batten to see the beam.");
         }
 
-        PaintHelper.drawShape(g, model.getShape(), getWidth(), getHeight());
+        PaintHelper.drawShape(g, getModel().getShape(), getWidth(), getHeight());
+
+        if (getOverlappingBatten() != null) {
+            g2d.setColor(PaintHelper.getHueBasedOnBackgroundColor(color));
+            PaintHelper.drawScaledString(g2d, connectionId, getWidth(), getHeight(), 5);
+        }
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
     }
@@ -103,19 +106,16 @@ public class JLight extends JFixture {
         this.fieldAngle = fieldAngle;
     }
 
-    public ConnectionType getConnectionType() {
-        return connectionType;
-    }
-
-    void setConnectionType(ConnectionType connectionType) {
-        this.connectionType = connectionType;
-    }
-
     public String getConnectionId() {
         return connectionId;
     }
 
     void setConnectionId(String connectionId) {
         this.connectionId = connectionId;
+        repaint();
+    }
+
+    boolean isFieldAngleRange() {
+        return getModel().getFieldAngle() == 0 && getModel().getFieldAngleMin() <= getModel().getFieldAngleMax();
     }
 }

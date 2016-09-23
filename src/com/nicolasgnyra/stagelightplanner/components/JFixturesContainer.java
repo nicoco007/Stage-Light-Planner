@@ -18,7 +18,9 @@ public class JFixturesContainer extends JPanel {
 
         JScrollPane scroller = new JScrollPane(container);
 
-        add(scroller, BorderLayout.CENTER);
+        scroller.setBorder(null);
+
+        add(scroller);
     }
 
     public void clear() {

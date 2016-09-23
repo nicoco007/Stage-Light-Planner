@@ -55,13 +55,15 @@ public abstract class JStageElement extends JComponent implements MouseListener,
     @Override
     public void setSize(int width, int height) {
         super.setSize(Math.round(width * parent.getZoom()), Math.round(height * parent.getZoom()));
+        parent.repaint();
     }
 
     @Override
     public void setLocation(int x, int y) {
-        int boundX = Math.max(0, Math.min(x, parent.getDrawingPane().getWidth() - getWidth()));
-        int boundY = Math.max(0, Math.min(y, parent.getDrawingPane().getHeight() - getHeight()));
-        super.setLocation((int)((boundX / parent.getCellSize()) * parent.getCellSize() * parent.getZoom()), (int)(boundY / parent.getCellSize() * parent.getCellSize() * parent.getZoom()));
+        double boundX = Math.max(0, Math.min(x * parent.getZoom(), parent.getDrawingPane().getWidth() - getWidth()));
+        double boundY = Math.max(0, Math.min(y * parent.getZoom(), parent.getDrawingPane().getHeight() - getHeight()));
+        super.setLocation((int) (Math.round(boundX / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.round(boundY / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
+        parent.repaint();
     }
 
     void reposition() {
@@ -144,11 +146,8 @@ public abstract class JStageElement extends JComponent implements MouseListener,
                 scrolledView.y -= 10;
             }
 
-            x = Math.round(Math.max(0, Math.min(x, drawingPane.getWidth() - getWidth())));
-            y = Math.round(Math.max(0, Math.min(y, drawingPane.getHeight() - getHeight())));
-
-            this.x = Math.round(x / parent.getZoom());
-            this.y = Math.round(y / parent.getZoom());
+            this.x = (int) (x / parent.getZoom());
+            this.y = (int) (y / parent.getZoom());
 
             repaint();
 

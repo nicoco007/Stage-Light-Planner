@@ -46,7 +46,7 @@ public class PlannerWindow extends JFrame {
 
         setJMenuBar(menuBar);
 
-        JPanel contentPane = new JPanel(new GridBagLayout());
+        JPanel contentPane = new JPanel(new BorderLayout(10, 5));
 
         JPropertiesContainer propertiesPanel = new JPropertiesContainer();
         stagePlanner = new JStagePlanner(propertiesPanel);
@@ -54,11 +54,11 @@ public class PlannerWindow extends JFrame {
 
         fixtureList.setMinimumSize(new Dimension(230, 150));
 
-        propertiesPanel.setMinimumSize(new Dimension(230, 150));
+        propertiesPanel.setPreferredSize(new Dimension(250, 0));
 
-        contentPane.add(stagePlanner, GridBagLayoutHelper.getGridBagLayoutConstraints(1, 0, GridBagConstraints.CENTER, 1, 1, 1, 1, true, true, new Insets(10, 10, 10, 10)));
-        contentPane.add(fixtureList, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 1, 1, 0, 0, false, true, new Insets(10, 10, 10, 10)));
-        contentPane.add(propertiesPanel, GridBagLayoutHelper.getGridBagLayoutConstraints(2, 0, GridBagConstraints.CENTER, 1, 1, 0, 0, false, true, new Insets(10, 10, 10, 10)));
+        contentPane.add(stagePlanner, BorderLayout.CENTER);
+        contentPane.add(propertiesPanel, BorderLayout.LINE_END);
+        contentPane.add(fixtureList, BorderLayout.PAGE_START);
 
         try {
             FileHelper.saveLightDefinitions(new ArrayList<>(Arrays.asList(

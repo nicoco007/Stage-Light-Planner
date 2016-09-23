@@ -35,7 +35,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private JPropertiesContainer propertiesContainer;
 
     private float zoom = 1.0f;
-    private final float minZoom = 0.5f;
+    private final float minZoom = 0.25f;
     private final float maxZoom = 5.0f;
 
     private boolean showLightOutlines = true;
@@ -50,7 +50,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         drawingPane.addMouseListener(this);
         drawingPane.addMouseMotionListener(this);
 
-        scroller = new JScrollPane(drawingPane);
+        scroller = new JScrollPane(drawingPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         JPanel bottomToolbar = new JPanel();
         bottomToolbar.setLayout(new BoxLayout(bottomToolbar, BoxLayout.X_AXIS));
@@ -63,6 +63,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         bottomToolbar.add(Box.createHorizontalGlue());
 
         String[] zoomChoices = {
+                "25%",
                 "50%",
                 "100%",
                 "200%",
@@ -297,16 +298,39 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 return;
             }
 
-            getFixtures().forEach(fixture -> {
-                if (fixture instanceof JLight) {
+            // set size
+            setPreferredSize(size);
+
+            // call super method
+            super.paintComponent(g);
+
+            // set color to light gray
+            g.setColor(Color.lightGray);
+
+            // draw small cells
+            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
+                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
+                    g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
+
+            // set color to darker gray
+            g.setColor(Color.gray);
+
+            // draw large cells
+            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom) * largeCellMultiplier)
+                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom) * largeCellMultiplier)
+                    g.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
+
+            getStageElements().forEach(stageElement -> {
+                if (stageElement instanceof JLight) {
+
+                    // cast fixture to light
+                    JLight light = (JLight) stageElement;
+
                     // get batten on top of which the light currently is
-                    JBatten overlappingBatten = ((JLight)fixture).getOverlappingBatten();
+                    JBatten overlappingBatten = light.getOverlappingBatten();
 
                     // if the batten was found
                     if (overlappingBatten != null) {
-
-                        // cast fixture to light
-                        JLight light = (JLight)fixture;
 
                         // get the color of the light
                         Color color = new Color(light.getBeamColor().getRed(), light.getBeamColor().getGreen(), light.getBeamColor().getBlue(), 128);
@@ -381,39 +405,17 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
                     }
 
-                    // reposition before repainting
-                    // this is necessary because Swing only repaints "visible" components, and if the position is not
-                    // set correctly, the component will be outside the viewport.
-                    fixture.reposition();
-
-                    // repaint the component
-                    fixture.repaint();
-
                 }
 
+                // reposition before repainting
+                // this is necessary because Swing only repaints "visible" components, and if the position is not
+                // set correctly, the component will be outside the viewport (and therefore not render).
+                stageElement.reposition();
+
+                // repaint the component
+                stageElement.repaint();
+
             });
-
-            // set size
-            setPreferredSize(size);
-
-            // call super method
-            super.paintComponent(g);
-
-            // set color to light gray
-            g.setColor(Color.lightGray);
-
-            // draw small cells
-            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
-                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
-                    g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
-
-            // set color to darker gray
-            g.setColor(Color.gray);
-
-            // draw large cells
-            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom) * largeCellMultiplier)
-                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom) * largeCellMultiplier)
-                    g.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
 
             // revalidate to update scrollbars
             revalidate();

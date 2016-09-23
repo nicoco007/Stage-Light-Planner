@@ -1,6 +1,5 @@
 package com.nicolasgnyra.stagelightplanner.components;
 
-import com.nicolasgnyra.stagelightplanner.ConnectionType;
 import com.nicolasgnyra.stagelightplanner.Orientation;
 
 import javax.swing.*;
@@ -73,13 +72,11 @@ public class JPropertiesContainer extends JPanel {
         propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation((int)((double)value)), -360.00, 360.00, 11.25, 2);
         propertiesPanel.addNumberField("Angle (degrees):", light.getAngle(), value -> light.setAngle((float)((double)value)), (int)(light.getFieldAngle() / 2 - 90), (int)(90 - light.getFieldAngle() / 2), 11.25, 2);
 
-        if (light.getModel().getFieldAngle() == 0 && light.getModel().getFieldAngleMin() <= light.getModel().getFieldAngleMax()) {
+        if (light.isFieldAngleRange())
             propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle((float)((double)value)), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 0.1, 1);
-        }
 
         propertiesPanel.addColorField("Beam Color:", light.getBeamColor(), light::setBeamColor);
 
-        propertiesPanel.addComboBoxField("Connection type:", new String[] { "DMX", "Dimmer Outlet" }, new ConnectionType[] { ConnectionType.DMX, ConnectionType.DIMMER }, light.getConnectionType(), light::setConnectionType);
         propertiesPanel.addTextField("Connection ID:", light.getConnectionId(), light::setConnectionId);
     }
 

@@ -1,7 +1,5 @@
 package com.nicolasgnyra.stagelightplanner;
 
-import javafx.scene.effect.Light;
-
 import java.awt.*;
 
 public class LightDefinition extends FixtureDefinition implements Cloneable {
@@ -95,12 +93,19 @@ public class LightDefinition extends FixtureDefinition implements Cloneable {
 
     @Override
     public LightDefinition clone() {
+
         try {
+
             return (LightDefinition) super.clone();
+
         } catch (CloneNotSupportedException ex) {
+
+            // this should never happen since we implemented the Cloneable interface
             System.out.println(ex.getMessage());
+
         }
 
         return this;
+
     }
 }

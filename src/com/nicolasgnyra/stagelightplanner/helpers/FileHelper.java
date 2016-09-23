@@ -152,8 +152,6 @@ public class FileHelper {
                 writer.writeFloat(light.getRotation());
                 writer.writeFloat(light.getAngle());
 
-                writer.writeInt(light.getConnectionType().ordinal());
-
                 writer.writeInt(light.getConnectionId().length());
                 writer.writeString(light.getConnectionId());
             }
@@ -204,10 +202,9 @@ public class FileHelper {
                     Color beamColor = new Color(reader.readByte() & 0xFF, reader.readByte() & 0xFF, reader.readByte() & 0xFF);
                     float rotation = reader.readFloat();
                     float angle = reader.readFloat();
-                    ConnectionType connectionType = ConnectionType.values()[reader.readInt()];
                     String connectionId = reader.readString(reader.readInt());
 
-                    stageElements.add(new JLight(x, y, lightDefinition, beamColor, rotation, angle, fieldAngle, connectionType, connectionId));
+                    stageElements.add(new JLight(x, y, lightDefinition, beamColor, rotation, angle, fieldAngle, connectionId));
                     break;
             }
 

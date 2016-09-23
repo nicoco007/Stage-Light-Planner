@@ -100,7 +100,7 @@ public class PaintHelper {
         }
     }
 
-    public static Font scaleFont(String text, Dimension dimension, Graphics g) {
+    private static Font scaleFont(String text, Dimension dimension, Graphics g) {
         Font font = g.getFont().deriveFont((float) dimension.height);
         int strWidth = g.getFontMetrics(font).stringWidth(text);
         float fontSize = (float) dimension.width / strWidth * dimension.height;
