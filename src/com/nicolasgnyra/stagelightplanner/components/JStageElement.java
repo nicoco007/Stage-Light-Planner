@@ -54,7 +54,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     @Override
     public void setSize(int width, int height) {
-        super.setSize(Math.round(width * parent.getZoom()), Math.round(height * parent.getZoom()));
+        super.setSize((int) (Math.ceil(width * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.ceil(height * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
         parent.repaint();
     }
 
@@ -197,6 +197,10 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     public int getGridY() {
         return y;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     boolean hasInnerFocus() {

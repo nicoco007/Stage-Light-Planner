@@ -463,6 +463,10 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 addBatten((JBatten)stageElement);
             } else if (stageElement instanceof JFixture) {
                 addFixture((JFixture)stageElement);
+            } else if (stageElement instanceof JDraggableLabel) {
+                addLabel((JDraggableLabel) stageElement);
+            } else {
+                System.out.println("Unknown stage element: " + stageElement.getClass());
             }
         }
     }

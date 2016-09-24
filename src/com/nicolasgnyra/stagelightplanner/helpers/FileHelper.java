@@ -2,6 +2,7 @@ package com.nicolasgnyra.stagelightplanner.helpers;
 
 import com.nicolasgnyra.stagelightplanner.*;
 import com.nicolasgnyra.stagelightplanner.components.JBatten;
+import com.nicolasgnyra.stagelightplanner.components.JDraggableLabel;
 import com.nicolasgnyra.stagelightplanner.components.JLight;
 import com.nicolasgnyra.stagelightplanner.components.JStageElement;
 import com.nicolasgnyra.stagelightplanner.exceptions.InvalidFileVersionException;
@@ -16,8 +17,10 @@ public class FileHelper {
     private static final byte lightDefinitionVersion = 1;
     private static final byte stagePlanVersion = 1;
 
+    private static final byte STAGE_ELEMENT_NONE = 0;
     private static final byte STAGE_ELEMENT_BATTEN = 1;
     private static final byte STAGE_ELEMENT_LIGHT = 2;
+    private static final byte STAGE_ELEMENT_LABEL = 3;
 
     public static void saveLightDefinitions(ArrayList<LightDefinition> lights, File file) throws IOException {
 
@@ -131,14 +134,14 @@ public class FileHelper {
             writer.writeInt(stageElement.getGridY());
 
             if (stageElement instanceof JBatten) {
-                JBatten batten = (JBatten)stageElement;
+                JBatten batten = (JBatten) stageElement;
                 writer.write(STAGE_ELEMENT_BATTEN);
 
                 writer.writeInt(batten.getHeightFromFloor());
                 writer.writeInt(batten.getLength());
                 writer.writeInt(batten.getOrientation().ordinal());
             } else if (stageElement instanceof JLight) {
-                JLight light = (JLight)stageElement;
+                JLight light = (JLight) stageElement;
                 writer.write(STAGE_ELEMENT_LIGHT);
 
                 writer.writeInt(lightDefinitions.indexOf(light.getModel()));
@@ -154,6 +157,23 @@ public class FileHelper {
 
                 writer.writeInt(light.getConnectionId().length());
                 writer.writeString(light.getConnectionId());
+            } else if (stageElement instanceof JDraggableLabel) {
+                JDraggableLabel label = (JDraggableLabel) stageElement;
+                writer.write(STAGE_ELEMENT_LABEL);
+
+                writer.writeInt(label.getText().length());
+                writer.writeString(label.getText());
+
+                writer.write(label.getColor().getRed());
+                writer.write(label.getColor().getGreen());
+                writer.write(label.getColor().getBlue());
+
+                writer.writeInt(label.getFontSize());
+
+                writer.writeInt(label.getFontFamily().length());
+                writer.writeString(label.getFontFamily());
+            } else {
+                writer.write(STAGE_ELEMENT_NONE);
             }
         }
 
@@ -205,6 +225,14 @@ public class FileHelper {
                     String connectionId = reader.readString(reader.readInt());
 
                     stageElements.add(new JLight(x, y, lightDefinition, beamColor, rotation, angle, fieldAngle, connectionId));
+                    break;
+                case STAGE_ELEMENT_LABEL:
+                    String text = reader.readString(reader.readInt());
+                    Color color = new Color(reader.readByte() & 0xFF, reader.readByte() & 0xFF, reader.readByte() & 0xFF);
+                    int fontSize = reader.readInt();
+                    String fontFamily = reader.readString(reader.readInt());
+
+                    stageElements.add(new JDraggableLabel(x, y, text, color, fontSize, fontFamily));
                     break;
             }
 

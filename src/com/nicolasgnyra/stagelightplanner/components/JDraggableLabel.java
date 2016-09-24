@@ -1,5 +1,7 @@
 package com.nicolasgnyra.stagelightplanner.components;
 
+import com.nicolasgnyra.stagelightplanner.helpers.PaintHelper;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -37,11 +39,14 @@ public class JDraggableLabel extends JStageElement {
 
         for (String line : lines) {
             Rectangle2D stringBounds = fm.getStringBounds(line, g);
-            width = Math.max(width, (int)stringBounds.getWidth());
+            width = Math.max(width, (int) stringBounds.getWidth());
             height += stringBounds.getHeight();
         }
 
-        setSize((int) Math.ceil((width + 10) / 10) * 10, (int) Math.ceil((height + 10) / 10) * 10);
+        this.width = width + parent.getCellSize();
+        this.height = height + parent.getCellSize();
+
+        reposition();
 
         g2d.setColor(color);
 
@@ -49,7 +54,7 @@ public class JDraggableLabel extends JStageElement {
             g2d.scale(parent.getZoom(), parent.getZoom());
             Rectangle2D stringBounds = fm.getStringBounds(lines[i], g);
             g2d.drawString(lines[i], (int) (getWidth() / parent.getZoom() - stringBounds.getWidth()) / 2, (int) (((getHeight() / parent.getZoom() - stringBounds.getHeight() * (lines.length - i)) / 2) + fm.getAscent() + (int)(stringBounds.getHeight() * i / 2)));
-            g2d.scale(1 / parent.getZoom(), 1 / parent.getZoom());
+            g2d.scale(1f / parent.getZoom(), 1f / parent.getZoom());
         }
 
         if (hasInnerFocus()) {
@@ -64,7 +69,7 @@ public class JDraggableLabel extends JStageElement {
         repaint();
     }
 
-    String getText() {
+    public String getText() {
         return text;
     }
 
@@ -73,7 +78,7 @@ public class JDraggableLabel extends JStageElement {
         repaint();
     }
 
-    int getFontSize() {
+    public int getFontSize() {
         return fontSize;
     }
 
@@ -82,7 +87,7 @@ public class JDraggableLabel extends JStageElement {
         repaint();
     }
 
-    String getFontFamily() {
+    public String getFontFamily() {
         return fontFamily;
     }
 
