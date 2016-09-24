@@ -48,14 +48,20 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     }
 
-    public void setParent(JStagePlanner parent) {
+    protected void propertyUpdated() {
+        repaint();
+        parent.setHasUnsavedChanges(true);
+        parent.repaint();
+    }
+
+    void setParent(JStagePlanner parent) {
         this.parent = parent;
     }
 
     @Override
     public void setSize(int width, int height) {
         super.setSize((int) (Math.ceil(width * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.ceil(height * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
-        parent.repaint();
+        propertyUpdated();
     }
 
     @Override
@@ -63,7 +69,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         double boundX = Math.max(0, Math.min(x * parent.getZoom(), parent.getDrawingPane().getWidth() - getWidth()));
         double boundY = Math.max(0, Math.min(y * parent.getZoom(), parent.getDrawingPane().getHeight() - getHeight()));
         super.setLocation((int) (Math.round(boundX / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.round(boundY / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
-        parent.repaint();
+        propertyUpdated();
     }
 
     void reposition() {
@@ -126,6 +132,8 @@ public abstract class JStageElement extends JComponent implements MouseListener,
     @Override
     public void mouseDragged(MouseEvent e) {
         if (dragging) {
+            parent.setHasUnsavedChanges(true);
+
             JLayeredPane drawingPane = parent.getDrawingPane();
             Rectangle view = parent.getScroller().getViewport().getViewRect();
             Rectangle scrolledView = (Rectangle)view.clone();

@@ -18,6 +18,7 @@ public class JBatten extends JStageElement implements MouseListener {
         super(x, y, orientation == Orientation.HORIZONTAL ? length : thickness, orientation == Orientation.VERTICAL ? length : thickness, Color.darkGray);
         this.length = length;
         this.heightFromFloor = heightFromFloor;
+        this.orientation = orientation;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class JBatten extends JStageElement implements MouseListener {
 
     void setOrientation(Orientation orientation) {
         this.orientation = orientation;
-        repaint();
+        propertyUpdated();
     }
 
     public int getLength() {
@@ -40,7 +41,7 @@ public class JBatten extends JStageElement implements MouseListener {
 
     void setLength(int length) {
         this.length = length;
-        repaint();
+        propertyUpdated();
     }
 
     public int getHeightFromFloor() {
@@ -49,7 +50,7 @@ public class JBatten extends JStageElement implements MouseListener {
 
     void setHeightFromFloor(int heightFromFloor) {
         this.heightFromFloor = heightFromFloor;
-        parent.repaint();
+        propertyUpdated();
     }
 
     @Override

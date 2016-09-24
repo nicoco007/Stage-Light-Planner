@@ -61,12 +61,6 @@ public class PlannerWindow extends JFrame {
         contentPane.add(fixtureList, BorderLayout.PAGE_START);
 
         try {
-            FileHelper.saveLightDefinitions(new ArrayList<>(Arrays.asList(
-                    new LightDefinition("Source Four Zoom Leko", "Zoom Leko", LightShape.OCTAGON, Color.black, 27.0f, 46.0f),
-                    new LightDefinition("Altman 65Q Fresnel", "Fresnel", LightShape.CIRCLE, Color.orange, 70.0f),
-                    new LightDefinition("Altman 3.5Q Leko", "Leko", LightShape.SQUARE, Color.gray, 38.0f),
-                    new LightDefinition("Altman 154 Scoop", "Scoop", LightShape.HEPTAGON, Color.orange, 90.0f)
-            )), new File("fixtures.slpfd"));
             lightDefinitions = FileHelper.loadLightDefinitions(new File("fixtures.slpfd"));
         } catch (IOException ex) {
             System.out.println("Whoop dee doo");
@@ -98,31 +92,29 @@ public class PlannerWindow extends JFrame {
     }
 
     private void clear() {
-        if (stagePlanner.hasUnsavedChanges()) {
-            if (JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to create a new plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                stagePlanner.getDrawingPane().removeAll();
-                loadedFile = null;
-            }
+        if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to create a new plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+            stagePlanner.getDrawingPane().removeAll();
+            loadedFile = null;
+            stagePlanner.setHasUnsavedChanges(false);
         }
     }
 
     private void open() {
-        if (stagePlanner.hasUnsavedChanges()) {
-            if (JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to load a plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+        if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to load a plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+            JFileChooser fileChooser = new JFileChooser();
+
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 stagePlanner.getDrawingPane().removeAll();
                 loadedFile = null;
 
-                JFileChooser fileChooser = new JFileChooser();
+                File loadFrom = fileChooser.getSelectedFile();
 
-                if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    File loadFrom = fileChooser.getSelectedFile();
-
-                    try {
-                        stagePlanner.setStagePlan(FileHelper.loadStagePlan(loadFrom));
-                        loadedFile = loadFrom;
-                    } catch (IOException | InvalidFileVersionException ex) {
-                        System.out.println(ex.getMessage());
-                    }
+                try {
+                    stagePlanner.setStagePlan(FileHelper.loadStagePlan(loadFrom));
+                    stagePlanner.setHasUnsavedChanges(false);
+                    loadedFile = loadFrom;
+                } catch (IOException | InvalidFileVersionException ex) {
+                    System.out.println(ex.getMessage());
                 }
             }
         }
@@ -134,6 +126,7 @@ public class PlannerWindow extends JFrame {
         } else {
             try {
                 FileHelper.saveStagePlan(stagePlanner.getStagePlan(), loadedFile);
+                stagePlanner.setHasUnsavedChanges(false);
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }
@@ -148,6 +141,7 @@ public class PlannerWindow extends JFrame {
 
             try {
                 FileHelper.saveStagePlan(stagePlanner.getStagePlan(), saveTo);
+                stagePlanner.setHasUnsavedChanges(false);
                 loadedFile = saveTo;
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());

@@ -78,7 +78,7 @@ public class JLight extends JFixture {
 
     void setRotation(int rotation) {
         this.rotation = rotation;
-        parent.repaint();
+        propertyUpdated();
     }
 
     public float getAngle() {
@@ -87,7 +87,7 @@ public class JLight extends JFixture {
 
     void setAngle(float angle) {
         this.angle = angle;
-        parent.repaint();
+        propertyUpdated();
     }
 
     public Color getBeamColor() {
@@ -96,6 +96,7 @@ public class JLight extends JFixture {
 
     void setBeamColor(Color beamColor) {
         this.beamColor = beamColor;
+        propertyUpdated();
     }
 
     public float getFieldAngle() {
@@ -104,6 +105,7 @@ public class JLight extends JFixture {
 
     void setFieldAngle(float fieldAngle) {
         this.fieldAngle = fieldAngle;
+        propertyUpdated();
     }
 
     public String getConnectionId() {
@@ -112,7 +114,7 @@ public class JLight extends JFixture {
 
     void setConnectionId(String connectionId) {
         this.connectionId = connectionId;
-        repaint();
+        propertyUpdated();
     }
 
     boolean isFieldAngleRange() {

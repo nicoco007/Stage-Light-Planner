@@ -25,7 +25,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private static final int cellSize = 10;
     private static final int largeCellMultiplier = 10;
     private static final int cmPerCell = 20;
-    private static final double pxPerCm = (double)cellSize / cmPerCell;
+    private static final double pxPerCm = (double) cellSize / cmPerCell;
 
     private JScrollPane scroller;
     private JLayeredPane drawingPane;       // graphics container
@@ -39,6 +39,8 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private final float maxZoom = 5.0f;
 
     private boolean showLightOutlines = true;
+
+    private boolean hasUnsavedChanges = false;
 
     public JStagePlanner(JPropertiesContainer propertiesContainer) {
         super(new BorderLayout());
@@ -104,23 +106,24 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         this.propertiesContainer = propertiesContainer;
     }
 
-    public void addStageElement(JStageElement stageElement) {
+    private void addStageElement(JStageElement stageElement) {
+        setHasUnsavedChanges(true);
         stageElement.setParent(this);
         drawingPane.add(stageElement);
         stageElement.requestInnerFocus();
     }
 
-    public void addBatten(JBatten batten) {
+    private void addBatten(JBatten batten) {
         addStageElement(batten);
         drawingPane.setLayer(batten, DrawingPane.BATTEN_LAYER);
     }
 
-    public void addFixture(JFixture fixture) {
+    private void addFixture(JFixture fixture) {
         addStageElement(fixture);
         drawingPane.setLayer(fixture, DrawingPane.FIXTURE_LAYER);
     }
 
-    public void addLabel(JDraggableLabel label) {
+    private void addLabel(JDraggableLabel label) {
         addStageElement(label);
         drawingPane.setLayer(label, DrawingPane.LABEL_LAYER);
     }
@@ -471,7 +474,11 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         }
     }
 
+    public void setHasUnsavedChanges(boolean hasUnsavedChanges) {
+        this.hasUnsavedChanges = hasUnsavedChanges;
+    }
+
     public boolean hasUnsavedChanges() {
-        return true;
+        return hasUnsavedChanges;
     }
 }

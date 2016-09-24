@@ -1,7 +1,5 @@
 package com.nicolasgnyra.stagelightplanner.components;
 
-import com.nicolasgnyra.stagelightplanner.helpers.PaintHelper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -66,7 +64,7 @@ public class JDraggableLabel extends JStageElement {
 
     void setText(String text) {
         this.text = text;
-        repaint();
+        propertyUpdated();
     }
 
     public String getText() {
@@ -75,7 +73,7 @@ public class JDraggableLabel extends JStageElement {
 
     void setFontSize(int size) {
         this.fontSize = size;
-        repaint();
+        propertyUpdated();
     }
 
     public int getFontSize() {
@@ -84,7 +82,7 @@ public class JDraggableLabel extends JStageElement {
 
     void setFontFamily(String fontFamily) {
         this.fontFamily = fontFamily;
-        repaint();
+        propertyUpdated();
     }
 
     public String getFontFamily() {
