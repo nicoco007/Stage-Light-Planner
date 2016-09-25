@@ -76,6 +76,14 @@ public class PlannerWindow extends JFrame {
         pack();
     }
 
+    @Override
+    public void setVisible(boolean b) {
+        super.setVisible(b);
+
+        WelcomeWindow welcomeWindow = new WelcomeWindow(this);
+        welcomeWindow.setVisible(true);
+    }
+
     private void showFixtureEditor() {
         FixtureEditorDialog window = new FixtureEditorDialog(lightDefinitions);
         window.setVisible(true);
@@ -91,7 +99,7 @@ public class PlannerWindow extends JFrame {
         lightDefinitions.forEach(fixtureList::addLight);
     }
 
-    private void clear() {
+    void clear() {
         if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to create a new plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
             stagePlanner.getDrawingPane().removeAll();
             loadedFile = null;
@@ -99,7 +107,7 @@ public class PlannerWindow extends JFrame {
         }
     }
 
-    private void open() {
+    boolean open() {
         if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to load a plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
             JFileChooser fileChooser = new JFileChooser();
 
@@ -113,27 +121,33 @@ public class PlannerWindow extends JFrame {
                     stagePlanner.setStagePlan(FileHelper.loadStagePlan(loadFrom));
                     stagePlanner.setHasUnsavedChanges(false);
                     loadedFile = loadFrom;
+                    return true;
                 } catch (IOException | InvalidFileVersionException ex) {
                     System.out.println(ex.getMessage());
                 }
             }
         }
+
+        return false;
     }
 
-    private void save() {
+    private boolean save() {
         if (loadedFile == null || !loadedFile.isFile()) {
-            saveAs();
+            return saveAs();
         } else {
             try {
                 FileHelper.saveStagePlan(stagePlanner.getStagePlan(), loadedFile);
                 stagePlanner.setHasUnsavedChanges(false);
+                return true;
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }
         }
+
+        return false;
     }
 
-    private void saveAs() {
+    private boolean saveAs() {
         JFileChooser fileChooser = new JFileChooser();
 
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -143,9 +157,12 @@ public class PlannerWindow extends JFrame {
                 FileHelper.saveStagePlan(stagePlanner.getStagePlan(), saveTo);
                 stagePlanner.setHasUnsavedChanges(false);
                 loadedFile = saveTo;
+                return true;
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
             }
         }
+
+        return false;
     }
 }

@@ -61,6 +61,8 @@ public class FileHelper {
     }
 
     private static LightDefinition readLightDefinition(FileStreamReader reader) throws IOException {
+
+        // read name, label, and shape
         String name = reader.readString(reader.readInt());
         String label = reader.readString(reader.readInt());
         LightShape shape = LightShape.values()[reader.readInt()];
@@ -69,11 +71,13 @@ public class FileHelper {
         // this also converts the byte to a short
         Color displayColor = new Color(reader.readByte() & 0xFF, reader.readByte() & 0xFF, reader.readByte() & 0xFF);
 
+        // read field angle & min/max
         Float fieldAngle = reader.readFloat();
         Float fieldAngleMin = reader.readFloat();
         Float fieldAngleMax = reader.readFloat();
 
-        if (fieldAngle > 0)
+        // create new LightDefinition class based on if the field angle is a range or not
+        if (fieldAngle > 0 && fieldAngleMin <= 0 && fieldAngleMax <= 0)
             return new LightDefinition(name, label, shape, displayColor, fieldAngle);
         else
             return new LightDefinition(name, label, shape, displayColor, fieldAngleMin, fieldAngleMax);
@@ -81,21 +85,27 @@ public class FileHelper {
 
     public static ArrayList<LightDefinition> loadLightDefinitions(File file) throws IOException, InvalidFileVersionException {
 
+        // create reader
         FileStreamReader reader = new FileStreamReader(file);
 
+        // read file version
         byte fileVersion = reader.readByte();
 
+        // check file version & throw exception if invalid
         if (fileVersion != lightDefinitionVersion)
             throw new InvalidFileVersionException("Invalid file version.");
 
+        // get light definition count
         int count = reader.readInt();
 
+        // create lights list
         ArrayList<LightDefinition> lights = new ArrayList<>();
 
-        for (int i = 0; i < count; i++) {
+        // iterate through & read all light definitions
+        for (int i = 0; i < count; i++)
             lights.add(readLightDefinition(reader));
-        }
 
+        // return lights list
         return lights;
 
     }
