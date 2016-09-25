@@ -10,7 +10,7 @@ public class JDraggableLabel extends JStageElement {
     private int fontSize;
     private String fontFamily;
 
-    public JDraggableLabel(int x, int y, String text) {
+    JDraggableLabel(int x, int y, String text) {
         this(x, y, text, Color.black, 12, UIManager.getLookAndFeelDefaults().getFont("Label.font").getFontName());
     }
 
@@ -24,9 +24,8 @@ public class JDraggableLabel extends JStageElement {
     @Override
     protected void paintElement(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        setFont(new Font(fontFamily, Font.PLAIN, fontSize));
+        g2d.setFont(new Font(fontFamily, Font.PLAIN, fontSize));
 
         FontMetrics fm = g2d.getFontMetrics();
 
@@ -44,9 +43,11 @@ public class JDraggableLabel extends JStageElement {
         this.width = width + parent.getCellSize();
         this.height = height + parent.getCellSize();
 
-        reposition();
+        //reposition();
 
         g2d.setColor(color);
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (int i = 0; i < lines.length; i++) {
             g2d.scale(parent.getZoom(), parent.getZoom());

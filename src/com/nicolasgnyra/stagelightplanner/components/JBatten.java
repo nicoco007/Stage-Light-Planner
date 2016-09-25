@@ -59,7 +59,6 @@ public class JBatten extends JStageElement implements MouseListener {
         width = orientation == Orientation.HORIZONTAL ? length : thickness;
         height = orientation == Orientation.VERTICAL ? length : thickness;
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(isFocused() ? getBackground().brighter() : getBackground());
         g2d.fillRect(0, 0, getWidth(), getHeight());
     }

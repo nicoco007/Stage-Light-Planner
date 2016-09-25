@@ -50,8 +50,6 @@ public class JLight extends JFixture {
     protected void paintElement(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         if (getOverlappingBatten() != null) {
             g2d.setColor(color);
             setToolTipText("<html><p>" + model.getDisplayName() + "</p><p>Field angle: " + getFieldAngle() + "°</p><p>Connection: " + getConnectionId() + "</p></html>");
@@ -59,6 +57,8 @@ public class JLight extends JFixture {
             g2d.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 128));
             setToolTipText("Place this light on a batten to see the beam.");
         }
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         PaintHelper.drawShape(g, getModel().getShape(), getWidth(), getHeight());
 
@@ -78,7 +78,7 @@ public class JLight extends JFixture {
         return rotation;
     }
 
-    void setRotation(int rotation) {
+    void setRotation(float rotation) {
         this.rotation = rotation;
         propertyUpdated();
     }

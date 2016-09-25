@@ -69,8 +69,8 @@ public class JPropertiesContainer extends JPanel {
 
     private void showLightProperties(final JLight light) {
         setTitle("Light", new String[] { light.getModel().getDisplayName(), "Beam Angle: " + (light.getModel().getFieldAngle() > 0 ? light.getModel().getFieldAngle() : light.getModel().getFieldAngleMin() + " - " + light.getModel().getFieldAngleMax()) + "°" });
-        propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation((int)((double)value)), -360.00, 360.00, 11.25, 2);
-        propertiesPanel.addNumberField("Angle (degrees):", light.getAngle(), value -> light.setAngle((float)((double)value)), (int)(light.getFieldAngle() / 2 - 90), (int)(90 - light.getFieldAngle() / 2), 11.25, 2);
+        propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation(value.floatValue()), -360.00, 360.00, 11.25, 2);
+        propertiesPanel.addNumberField("Angle (degrees):", light.getAngle(), value -> light.setAngle(value.floatValue()), (int)(light.getFieldAngle() / 2 - 90), (int)(90 - light.getFieldAngle() / 2), 11.25, 2);
 
         if (light.isFieldAngleRange())
             propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle((float)((double)value)), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 0.1, 1);

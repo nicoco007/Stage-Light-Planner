@@ -25,8 +25,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         this.height = height;
         this.color = color;
 
-        setSize(width, height);
-        setLocation(x, y);
+        reposition();
 
         setFocusable(true);
 
@@ -80,7 +79,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     @Override
     protected void paintComponent(Graphics g) {
-        reposition();
+        System.out.println("paintComponent " + getClass().getCanonicalName());
 
         super.paintComponent(g);
 
@@ -158,9 +157,9 @@ public abstract class JStageElement extends JComponent implements MouseListener,
             this.x = (int) (x / parent.getZoom());
             this.y = (int) (y / parent.getZoom());
 
-            repaint();
-
             drawingPane.scrollRectToVisible(scrolledView);
+
+            drawingPane.repaint();
         }
     }
 

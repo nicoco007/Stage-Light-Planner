@@ -58,7 +58,10 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         bottomToolbar.setLayout(new BoxLayout(bottomToolbar, BoxLayout.X_AXIS));
 
         JCheckBox showOutlinesCheckBox = new JCheckBox("Show beam outlines", showLightOutlines);
-        showOutlinesCheckBox.addItemListener((e) -> showLightOutlines = e.getStateChange() == ItemEvent.SELECTED);
+        showOutlinesCheckBox.addItemListener((e) -> {
+            showLightOutlines = e.getStateChange() == ItemEvent.SELECTED;
+            repaint();
+        });
 
         bottomToolbar.add(showOutlinesCheckBox);
 
@@ -83,12 +86,8 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
             if (matcher.matches()) {
                 zoom = Math.max(minZoom, Math.min(Float.parseFloat(matcher.group(1)) / 100f, maxZoom));
-                drawingPane.repaint();
-                revalidate();
                 repaint();
-
-                for (Component comp : drawingPane.getComponents())
-                    comp.repaint();
+                revalidate();
             }
 
             zoomComboBox.setSelectedItem(Math.round(zoom * 100) + "%");
@@ -294,6 +293,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
         @Override
         protected void paintComponent(Graphics g) {
+            System.out.println("paintComponent " + getClass().getCanonicalName());
 
             // check zoom
             if (zoom < minZoom || zoom > maxZoom) {
@@ -311,9 +311,10 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
             g.setColor(Color.lightGray);
 
             // draw small cells
-            for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
-                for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
-                    g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
+            if (zoom >= 0.5f)
+                for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
+                    for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
+                        g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
 
             // set color to darker gray
             g.setColor(Color.gray);
@@ -414,9 +415,6 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 // this is necessary because Swing only repaints "visible" components, and if the position is not
                 // set correctly, the component will be outside the viewport (and therefore not render).
                 stageElement.reposition();
-
-                // repaint the component
-                stageElement.repaint();
 
             });
 
