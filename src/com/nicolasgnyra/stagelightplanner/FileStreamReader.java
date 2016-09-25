@@ -30,7 +30,7 @@ public class FileStreamReader extends FileInputStream {
      * @since 4.0
      *
      * @param file Input file.
-     * @throws IOException
+     * @throws IOException Occurs when an input/output error occurs
      */
     public FileStreamReader(File file) throws IOException {
 

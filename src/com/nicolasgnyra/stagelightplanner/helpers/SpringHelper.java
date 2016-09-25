@@ -32,7 +32,6 @@
 package com.nicolasgnyra.stagelightplanner.helpers;
 
 import javax.swing.*;
-import javax.swing.SpringLayout;
 import java.awt.*;
 
 public class SpringHelper {

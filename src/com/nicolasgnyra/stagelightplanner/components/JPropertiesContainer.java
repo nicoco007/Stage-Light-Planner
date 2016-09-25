@@ -77,6 +77,8 @@ public class JPropertiesContainer extends JPanel {
 
         propertiesPanel.addColorField("Beam Color:", light.getBeamColor(), light::setBeamColor);
 
+        propertiesPanel.addSlider("Beam Intensity: ", light.getBeamIntensity(), 0, 100, 10, 20, light::setBeamIntensity);
+
         propertiesPanel.addTextField("Connection ID:", light.getConnectionId(), light::setConnectionId);
     }
 

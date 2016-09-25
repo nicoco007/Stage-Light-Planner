@@ -1,18 +1,16 @@
 package com.nicolasgnyra.stagelightplanner.windows;
 
 import com.nicolasgnyra.stagelightplanner.LightDefinition;
-import com.nicolasgnyra.stagelightplanner.LightShape;
 import com.nicolasgnyra.stagelightplanner.components.*;
 import com.nicolasgnyra.stagelightplanner.exceptions.InvalidFileVersionException;
+import com.nicolasgnyra.stagelightplanner.helpers.ExceptionHelper;
 import com.nicolasgnyra.stagelightplanner.helpers.FileHelper;
-import com.nicolasgnyra.stagelightplanner.helpers.GridBagLayoutHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PlannerWindow extends JFrame {
     private File loadedFile = null;
@@ -102,6 +100,7 @@ public class PlannerWindow extends JFrame {
     void clear() {
         if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to create a new plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
             stagePlanner.getDrawingPane().removeAll();
+            stagePlanner.repaint();
             loadedFile = null;
             stagePlanner.setHasUnsavedChanges(false);
         }
@@ -122,8 +121,10 @@ public class PlannerWindow extends JFrame {
                     stagePlanner.setHasUnsavedChanges(false);
                     loadedFile = loadFrom;
                     return true;
-                } catch (IOException | InvalidFileVersionException ex) {
-                    System.out.println(ex.getMessage());
+                } catch (InvalidFileVersionException ex) {
+                    JOptionPane.showMessageDialog(this, "That plan was created with an older version of the program and cannot be loaded.", "Unable to load file", JOptionPane.WARNING_MESSAGE);
+                } catch (Exception ex) {
+                    ExceptionHelper.showErrorDialog(this, ex);
                 }
             }
         }
@@ -139,8 +140,8 @@ public class PlannerWindow extends JFrame {
                 FileHelper.saveStagePlan(stagePlanner.getStagePlan(), loadedFile);
                 stagePlanner.setHasUnsavedChanges(false);
                 return true;
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+            } catch (Exception ex) {
+                ExceptionHelper.showErrorDialog(this, ex);
             }
         }
 
@@ -158,8 +159,8 @@ public class PlannerWindow extends JFrame {
                 stagePlanner.setHasUnsavedChanges(false);
                 loadedFile = saveTo;
                 return true;
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+            } catch (Exception ex) {
+                ExceptionHelper.showErrorDialog(this, ex);
             }
         }
 

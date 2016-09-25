@@ -43,26 +43,25 @@ public class PaintHelper {
         Polygon polygon = new Polygon();
 
         for (int i = 0; i < sides; i++) {
-            if (xpoints[i] > 0 && xpoints[i] < width) {
-                double minXdispl = minX * (xpoints[i] - minX) / (width - minX);
-                double maxXdispl = (width - maxX) * (maxX - xpoints[i]) / maxX;
-
-                xpoints[i] = xpoints[i] - minX + minXdispl;
-                xpoints[i] = xpoints[i] + (width - maxX) - maxXdispl;
-            }
-
-            if (ypoints[i] > 0 && ypoints[i] < height){
-                double minYdispl = minY * (ypoints[i] - minY) / (height - minY);
-                double maxYdispl = (height - maxY) * (maxY - ypoints[i]) / maxY;
-
-                ypoints[i] = ypoints[i] - minY + minYdispl;
-                ypoints[i] = ypoints[i] + (height - maxY) - maxYdispl;
-            }
+            xpoints[i] = stretchPoints(xpoints[i], width, minX, maxX);
+            ypoints[i] = stretchPoints(ypoints[i], height, minY, maxY);
 
             polygon.addPoint((int)Math.round(xpoints[i]), (int)Math.round(ypoints[i]));
         }
 
         return polygon;
+    }
+
+    private static double stretchPoints(double point, double size, double min, double max) {
+        if (point > 0 && point < size) {
+            double minXdispl = min * (point - min) / (size - min);
+            double maxXdispl = (size - max) * (max - point) / max;
+
+            point = point - min + minXdispl;
+            point = point + (size - max) - maxXdispl;
+        }
+
+        return point;
     }
     
     public static void drawShape(Graphics g, LightShape shape, int width, int height) {

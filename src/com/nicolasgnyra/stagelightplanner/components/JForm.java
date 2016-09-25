@@ -157,15 +157,33 @@ public class JForm extends JPanel {
 
         final JCheckBox checkBox = new JCheckBox(text, value);
 
-        checkBox.addActionListener(e -> {
-            onUpdate.accept(checkBox.isSelected());
-        });
+        checkBox.addActionListener(e -> onUpdate.accept(checkBox.isSelected()));
 
         add(checkBox, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
         revalidate();
 
         return new FormElement<JCheckBox>(label, checkBox);
+    }
+
+    public FormElement<JSlider> addSlider(String text, Integer value, Integer min, Integer max, int minorTickInterval, int majorTickInterval, Consumer<Integer> onUpdate) {
+        JLabel label = addLabel(text);
+
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, value);
+
+        slider.addChangeListener(e -> onUpdate.accept(slider.getValue()));
+
+        slider.setPreferredSize(new Dimension(0, 40));
+        slider.setPaintLabels(true);
+        slider.setPaintTicks(true);
+        slider.setMinorTickSpacing(minorTickInterval);
+        slider.setMajorTickSpacing(majorTickInterval);
+
+        add(slider, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
+
+        revalidate();
+
+        return new FormElement<JSlider>(label, slider);
     }
 
     public void addVerticalGlue() {

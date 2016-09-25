@@ -12,16 +12,17 @@ public class JLight extends JFixture {
     private float fieldAngle;
     private Color beamColor;
     private String connectionId;
+    private int beamIntensity;
 
     JLight(int x, int y, LightDefinition model) {
         this(x, y, model, new Color(255, 255, 0), 0.0f, 0.0f);
     }
 
     public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle) {
-        this(x, y, model, beamColor, rotation, angle, model.getFieldAngle() > 0 ? model.getFieldAngle() : model.getFieldAngleMax(), "");
+        this(x, y, model, beamColor, rotation, angle, model.getFieldAngle() > 0 ? model.getFieldAngle() : model.getFieldAngleMax(), "", 100);
     }
 
-    public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle, float fieldAngle, String connectionId) {
+    public JLight(int x, int y, LightDefinition model, Color beamColor, float rotation, float angle, float fieldAngle, String connectionId, int beamIntensity) {
         super(x, y, 30, 30, model.getDisplayColor());
         this.model = model;
         this.beamColor = beamColor;
@@ -29,6 +30,7 @@ public class JLight extends JFixture {
         this.angle = angle;
         this.fieldAngle = fieldAngle;
         this.connectionId = connectionId;
+        this.beamIntensity = beamIntensity;
     }
 
     JBatten getOverlappingBatten() {
@@ -119,5 +121,14 @@ public class JLight extends JFixture {
 
     boolean isFieldAngleRange() {
         return getModel().getFieldAngle() == 0 && getModel().getFieldAngleMin() <= getModel().getFieldAngleMax();
+    }
+
+    public int getBeamIntensity() {
+        return beamIntensity;
+    }
+
+    void setBeamIntensity(int beamIntensity) {
+        this.beamIntensity = beamIntensity;
+        propertyUpdated();
     }
 }

@@ -167,6 +167,8 @@ public class FileHelper {
 
                 writer.writeInt(light.getConnectionId().length());
                 writer.writeString(light.getConnectionId());
+
+                writer.writeInt(light.getBeamIntensity());
             } else if (stageElement instanceof JDraggableLabel) {
                 JDraggableLabel label = (JDraggableLabel) stageElement;
                 writer.write(STAGE_ELEMENT_LABEL);
@@ -233,8 +235,9 @@ public class FileHelper {
                     float rotation = reader.readFloat();
                     float angle = reader.readFloat();
                     String connectionId = reader.readString(reader.readInt());
+                    int beamIntensity = reader.readInt();
 
-                    stageElements.add(new JLight(x, y, lightDefinition, beamColor, rotation, angle, fieldAngle, connectionId));
+                    stageElements.add(new JLight(x, y, lightDefinition, beamColor, rotation, angle, fieldAngle, connectionId, beamIntensity));
                     break;
                 case STAGE_ELEMENT_LABEL:
                     String text = reader.readString(reader.readInt());

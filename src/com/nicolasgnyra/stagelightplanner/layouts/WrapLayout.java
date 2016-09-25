@@ -106,8 +106,6 @@ public class WrapLayout extends FlowLayout
 			container = container.getParent();
 		}
 
-		targetWidth = container.getSize().width;
-
 		if (targetWidth == 0)
 			targetWidth = Integer.MAX_VALUE;
 

@@ -40,16 +40,19 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
         popupMenu = new JPopupMenu();
 
+        JMenuItem cloneItem = new JMenuItem("Clone");
         JMenuItem deleteItem = new JMenuItem("Delete");
 
-        deleteItem.addActionListener((e) -> removeSelf());
+        cloneItem.addActionListener(e -> addClone());
 
+        deleteItem.addActionListener(e -> removeSelf());
+
+        popupMenu.add(cloneItem);
         popupMenu.add(deleteItem);
 
     }
 
     protected void propertyUpdated() {
-        repaint();
         parent.setHasUnsavedChanges(true);
         parent.repaint();
     }
@@ -61,7 +64,6 @@ public abstract class JStageElement extends JComponent implements MouseListener,
     @Override
     public void setSize(int width, int height) {
         super.setSize((int) (Math.ceil(width * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.ceil(height * parent.getZoom() / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
-        propertyUpdated();
     }
 
     @Override
@@ -69,7 +71,6 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         double boundX = Math.max(0, Math.min(x * parent.getZoom(), parent.getDrawingPane().getWidth() - getWidth()));
         double boundY = Math.max(0, Math.min(y * parent.getZoom(), parent.getDrawingPane().getHeight() - getHeight()));
         super.setLocation((int) (Math.round(boundX / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()), (int) (Math.round(boundY / (parent.getCellSize() * parent.getZoom())) * parent.getCellSize() * parent.getZoom()));
-        propertyUpdated();
     }
 
     void reposition() {
@@ -213,5 +214,41 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     boolean hasInnerFocus() {
         return focus;
+    }
+
+    private void addClone() {
+        if (this instanceof JBatten) {
+            JBatten batten = (JBatten) this;
+            parent.addBatten(new JBatten(
+                    batten.getGridX() + parent.getCellSize() * 2,
+                    batten.getGridY() + parent.getCellSize() * 2,
+                    batten.getLength(),
+                    batten.getOrientation(),
+                    batten.getHeightFromFloor()
+            ));
+        } else if (this instanceof JLight) {
+            JLight light = (JLight) this;
+            parent.addFixture(new JLight(
+                    light.getGridX() + parent.getCellSize() * 2,
+                    light.getGridY() + parent.getCellSize() * 2,
+                    light.getModel().clone(),
+                    light.getBeamColor(),
+                    light.getRotation(),
+                    light.getAngle(),
+                    light.getFieldAngle(),
+                    light.getConnectionId(),
+                    light.getBeamIntensity()
+            ));
+        } else if (this instanceof JDraggableLabel) {
+            JDraggableLabel label = (JDraggableLabel) this;
+            parent.addLabel(new JDraggableLabel(
+                    label.getGridX() + parent.getCellSize() * 2,
+                    label.getGridY() + parent.getCellSize() * 2,
+                    label.getText(),
+                    label.getColor(),
+                    label.getFontSize(),
+                    label.getFontFamily()
+            ));
+        }
     }
 }

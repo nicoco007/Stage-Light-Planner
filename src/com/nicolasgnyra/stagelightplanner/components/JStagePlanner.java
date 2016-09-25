@@ -106,24 +106,24 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         this.propertiesContainer = propertiesContainer;
     }
 
-    private void addStageElement(JStageElement stageElement) {
+    void addStageElement(JStageElement stageElement) {
         setHasUnsavedChanges(true);
         stageElement.setParent(this);
         drawingPane.add(stageElement);
         stageElement.requestInnerFocus();
     }
 
-    private void addBatten(JBatten batten) {
+    void addBatten(JBatten batten) {
         addStageElement(batten);
         drawingPane.setLayer(batten, DrawingPane.BATTEN_LAYER);
     }
 
-    private void addFixture(JFixture fixture) {
+    void addFixture(JFixture fixture) {
         addStageElement(fixture);
         drawingPane.setLayer(fixture, DrawingPane.FIXTURE_LAYER);
     }
 
-    private void addLabel(JDraggableLabel label) {
+    void addLabel(JDraggableLabel label) {
         addStageElement(label);
         drawingPane.setLayer(label, DrawingPane.LABEL_LAYER);
     }
@@ -336,7 +336,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                     if (overlappingBatten != null) {
 
                         // get the color of the light
-                        Color color = new Color(light.getBeamColor().getRed(), light.getBeamColor().getGreen(), light.getBeamColor().getBlue(), 128);
+                        Color color = new Color(light.getBeamColor().getRed(), light.getBeamColor().getGreen(), light.getBeamColor().getBlue(), 128 * light.getBeamIntensity() / 100);
 
                         // get batten "height" in pixels
                         double battenHeight = overlappingBatten.getHeightFromFloor() * pxPerCm * zoom;
@@ -365,7 +365,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
                         // create & rotate transform according to user input
                         AffineTransform transform = new AffineTransform();
-                        transform.rotate(Math.toRadians(light.getRotation()) + Math.PI / 2, light.getX() + light.getWidth() / 2, light.getY() + light.getHeight() / 2);
+                        transform.rotate(-Math.toRadians(light.getRotation()) + Math.PI / 2, light.getX() + light.getWidth() / 2, light.getY() + light.getHeight() / 2);
 
                         // enable anti-aliasing
                         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
