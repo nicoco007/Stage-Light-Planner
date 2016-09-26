@@ -3,6 +3,7 @@ package com.nicolasgnyra.stagelightplanner.components;
 import com.nicolasgnyra.stagelightplanner.LightDefinition;
 import com.nicolasgnyra.stagelightplanner.Orientation;
 import com.nicolasgnyra.stagelightplanner.StagePlan;
+import com.nicolasgnyra.stagelightplanner.helpers.PaintHelper;
 import com.nicolasgnyra.stagelightplanner.transferables.StageElementTransferable;
 
 import javax.swing.*;
@@ -37,6 +38,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private float zoom = 1.0f;
     private final float minZoom = 0.25f;
     private final float maxZoom = 5.0f;
+    private float paintedZoom;
 
     private boolean showLightOutlines = true;
 
@@ -86,8 +88,8 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
             if (matcher.matches()) {
                 zoom = Math.max(minZoom, Math.min(Float.parseFloat(matcher.group(1)) / 100f, maxZoom));
+                getStageElements().forEach(JStageElement::reposition);
                 repaint();
-                revalidate();
             }
 
             zoomComboBox.setSelectedItem(Math.round(zoom * 100) + "%");
@@ -110,6 +112,9 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         stageElement.setParent(this);
         drawingPane.add(stageElement);
         stageElement.requestInnerFocus();
+        stageElement.repaint();
+        stageElement.reposition();
+        repaint();
     }
 
     void addBatten(JBatten batten) {
@@ -336,85 +341,11 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                     // if the batten was found
                     if (overlappingBatten != null) {
 
-                        // get the color of the light
-                        Color color = new Color(light.getBeamColor().getRed(), light.getBeamColor().getGreen(), light.getBeamColor().getBlue(), 128 * light.getBeamIntensity() / 100);
-
-                        // get batten "height" in pixels
-                        double battenHeight = overlappingBatten.getHeightFromFloor() * pxPerCm * zoom;
-
-                        // create ellipse rectangle (container)
-                        Rectangle rect = new Rectangle();
-
-                        // cast graphics to 2D graphics
-                        Graphics2D g2d = (Graphics2D)g;
-
-                        // get length of beam at closest and farthest edges of the beam oval on the floor using the law of sines
-                        double b1 = battenHeight / Math.sin(Math.PI / 2 - Math.toRadians(light.getAngle() - light.getFieldAngle() / 2));
-                        double b2 = battenHeight / Math.sin(Math.PI / 2 - Math.toRadians(light.getAngle() + light.getFieldAngle() / 2));
-
-                        // set width of ellipse based on the two above lengths and the law of cosines
-                        rect.width = (int)Math.sqrt(Math.pow(b1, 2) + Math.pow(b2, 2) - 2 * b1 * b2 * Math.cos(Math.toRadians(light.getFieldAngle())));
-
-                        // set height based only on beam angle (this doesn't change with the angle of the light)
-                        rect.height = (int)Math.round((2 * battenHeight * Math.sin(Math.toRadians(light.getFieldAngle()) / 2)) / Math.sin(Math.PI / 2 - Math.toRadians(light.getFieldAngle()) / 2));
-
-                        // get x location from start of beam ellipse (Pythagorean theorem)
-                        rect.x = (int)Math.sqrt(Math.pow(b1, 2) - Math.pow(battenHeight, 2));
-
-                        // make x negative if the angle is below 0 (square root is always positive)
-                        if (light.getAngle() - light.getFieldAngle() / 2 < 0) rect.x = -rect.x;
-
-                        // create & rotate transform according to user input
-                        AffineTransform transform = new AffineTransform();
-                        transform.rotate(-Math.toRadians(light.getRotation()) + Math.PI / 2, light.getX() + light.getWidth() / 2, light.getY() + light.getHeight() / 2);
-
-                        // enable anti-aliasing
-                        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                        // set color according to user input (add 50% opacity)
-                        g2d.setColor(color);
-
-                        // get transformed shape
-                        Shape transformedEllipse = transform.createTransformedShape(new Ellipse2D.Double(light.getX() + rect.x + light.getWidth() / 2, light.getY() + rect.y + light.getHeight() / 2 - rect.height / 2, rect.width, rect.height));
-
-                        // fill sized & rotate ellipse
-                        g2d.fill(transformedEllipse);
-
-                        // check if user wants to show outlines
-                        if (showLightOutlines) {
-
-                            // save previous stroke
-                            Stroke previousStroke = g2d.getStroke();
-
-                            // set color to darker version of beam color
-                            g2d.setColor(color.darker());
-
-                            // draw transformed ellipse (outline)
-                            g2d.draw(transformedEllipse);
-
-                            // set stroke to dotted line
-                            g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 5 }, 0));
-
-                            // draw lines from center of light to beam ellipse
-                            g2d.draw(transform.createTransformedShape(new Line2D.Double(light.getX() + light.getWidth() / 2, light.getY() + light.getHeight() / 2, light.getX() + rect.x + light.getWidth() / 2 + rect.width / 2, light.getY() + rect.y + light.getHeight() / 2 - rect.height / 2)));
-                            g2d.draw(transform.createTransformedShape(new Line2D.Double(light.getX() + light.getWidth() / 2, light.getY() + light.getHeight() / 2, light.getX() + rect.x + light.getWidth() / 2 + rect.width / 2, light.getY() + rect.y + light.getHeight() / 2 + rect.height / 2)));
-
-                            // reset stroke
-                            g2d.setStroke(previousStroke);
-
-                        }
-
-                        // restore anti-aliasing setting to default
-                        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+                        PaintHelper.drawBeam((Graphics2D) g, light.getX(), light.getY(), light.getWidth(), light.getHeight(), light.getFieldAngle(), (int) (overlappingBatten.getHeightFromFloor() * getZoom()), light.getBeamColor(), light.getBeamIntensity(), light.getRotation(), light.getAngle(), showLightOutlines);
 
                     }
 
                 }
-
-                // reposition before repainting
-                // this is necessary because Swing only repaints "visible" components, and if the position is not
-                // set correctly, the component will be outside the viewport (and therefore not render).
-                stageElement.reposition();
 
             });
 

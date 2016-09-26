@@ -84,9 +84,11 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         super.paintComponent(g);
 
         paintElement(g);
+
+        reposition();
     }
 
-    public void requestInnerFocus() {
+    void requestInnerFocus() {
         for (Component comp : getParent().getComponents()) {
             if (comp instanceof JStageElement) {
                 JStageElement stageElement = (JStageElement) comp;
@@ -159,7 +161,9 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
             drawingPane.scrollRectToVisible(scrolledView);
 
-            drawingPane.repaint();
+            reposition();
+
+            parent.repaint();
         }
     }
 

@@ -108,4 +108,8 @@ public class LightDefinition extends FixtureDefinition implements Cloneable {
         return this;
 
     }
+
+    public boolean isFieldAngleRange() {
+        return getFieldAngle() == 0 && 0 < getFieldAngleMin() && getFieldAngleMin() <= getFieldAngleMax() && getFieldAngleMax() <= 180;
+    }
 }

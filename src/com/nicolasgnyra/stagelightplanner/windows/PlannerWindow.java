@@ -8,11 +8,14 @@ import com.nicolasgnyra.stagelightplanner.helpers.FileHelper;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PlannerWindow extends JFrame {
+public class PlannerWindow extends JFrame implements WindowListener {
     private File loadedFile = null;
     private JStagePlanner stagePlanner;
     private JFixturesContainer fixtureList;
@@ -21,7 +24,7 @@ public class PlannerWindow extends JFrame {
     public PlannerWindow() {
         setTitle("Stage Light Planner");
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         JMenuBar menuBar = new JMenuBar();
 
@@ -30,10 +33,12 @@ public class PlannerWindow extends JFrame {
         JMenu toolsMenu = new JMenu("Tools");
         JMenu helpMenu = new JMenu("Help");
 
-        fileMenu.add(new JActionMenuItem("New", e -> clear()));
-        fileMenu.add(new JActionMenuItem("Open...", e -> open()));
-        fileMenu.add(new JActionMenuItem("Save", e -> save()));
-        fileMenu.add(new JActionMenuItem("Save as...", e -> saveAs()));
+        fileMenu.add(new JActionMenuItem("New",         e -> clear(),       KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK)));
+        fileMenu.add(new JActionMenuItem("Open...",     e -> open(),        KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK)));
+        fileMenu.add(new JActionMenuItem("Save",        e -> save(),        KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK)));
+        fileMenu.add(new JActionMenuItem("Save as...",  e -> saveAs(),      KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK | Event.SHIFT_MASK)));
+        fileMenu.addSeparator();
+        fileMenu.add(new JActionMenuItem("Quit",        e -> shutdown()));
 
         toolsMenu.add(new JActionMenuItem("Fixture Editor", e -> showFixtureEditor()));
 
@@ -70,6 +75,8 @@ public class PlannerWindow extends JFrame {
 
         setContentPane(contentPane);
 
+        addWindowListener(this);
+
         validate();
         pack();
     }
@@ -78,12 +85,14 @@ public class PlannerWindow extends JFrame {
     public void setVisible(boolean b) {
         super.setVisible(b);
 
-        WelcomeWindow welcomeWindow = new WelcomeWindow(this);
-        welcomeWindow.setVisible(true);
+        if (b) {
+            WelcomeDialog welcomeDialog = new WelcomeDialog(this);
+            welcomeDialog.setVisible(true);
+        }
     }
 
     private void showFixtureEditor() {
-        FixtureEditorDialog window = new FixtureEditorDialog(lightDefinitions);
+        FixtureEditorDialog window = new FixtureEditorDialog(this, lightDefinitions);
         window.setVisible(true);
         reloadFixtureList();
     }
@@ -166,4 +175,43 @@ public class PlannerWindow extends JFrame {
 
         return false;
     }
+
+    private void shutdown() {
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        if (stagePlanner.hasUnsavedChanges()) {
+            int result = JOptionPane.showConfirmDialog(this, "There are unsaved changes. Would you like to save before exiting?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if ((result == JOptionPane.YES_OPTION && !save()) || result == JOptionPane.CANCEL_OPTION)
+                return;
+        }
+
+        dispose();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        try {
+            FileHelper.saveLightDefinitions(lightDefinitions, new File("fixtures.slpfd"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) { }
+
+    @Override
+    public void windowIconified(WindowEvent e) { }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) { }
+
+    @Override
+    public void windowActivated(WindowEvent e) { }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) { }
 }

@@ -13,7 +13,7 @@ public class JColorChooserButton extends JButton {
     private Color current = null;
     private List<ColorChangedListener> listeners = new ArrayList<>();
 
-    public JColorChooserButton(Color initialColor) {
+    public JColorChooserButton(final Color initialColor) {
 
         // set selected color to specified color
         setSelectedColor(initialColor);
@@ -44,29 +44,32 @@ public class JColorChooserButton extends JButton {
     }
 
     public void setSelectedColor(Color newColor) {
-        if (newColor == null) return;
+
+        if (newColor == null)
+            return;
 
         current = newColor;
         setIcon(createIcon(current, 16, 16));
         repaint();
 
-        for (ColorChangedListener l : listeners) {
+        for (ColorChangedListener l : listeners)
             l.colorChanged(newColor);
-        }
+
     }
 
     public void addColorChangedListener(ColorChangedListener listener) {
         listeners.add(listener);
     }
 
-    public static  ImageIcon createIcon(Color main, int width, int height) {
+    public static ImageIcon createIcon(Color main, int width, int height) {
         BufferedImage image = new BufferedImage(width, height, java.awt.image.BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
         graphics.setColor(main);
         graphics.fillRect(0, 0, width, height);
         graphics.setXORMode(Color.DARK_GRAY);
-        graphics.drawRect(0, 0, width-1, height-1);
+        graphics.drawRect(0, 0, width - 1, height - 1);
         image.flush();
+
         return new ImageIcon(image);
     }
 

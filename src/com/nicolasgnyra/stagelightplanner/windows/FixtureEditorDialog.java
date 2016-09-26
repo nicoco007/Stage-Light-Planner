@@ -3,14 +3,14 @@ package com.nicolasgnyra.stagelightplanner.windows;
 import com.nicolasgnyra.stagelightplanner.FormElement;
 import com.nicolasgnyra.stagelightplanner.LightDefinition;
 import com.nicolasgnyra.stagelightplanner.LightShape;
+import com.nicolasgnyra.stagelightplanner.components.JActionButton;
 import com.nicolasgnyra.stagelightplanner.components.JForm;
+import com.nicolasgnyra.stagelightplanner.components.JPreviewPane;
 import com.nicolasgnyra.stagelightplanner.helpers.GridBagLayoutHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 class FixtureEditorDialog extends JDialog {
@@ -18,9 +18,10 @@ class FixtureEditorDialog extends JDialog {
     private DefaultTableModel tableModel;
     private ArrayList<LightDefinition> lightDefinitions;
     private JForm form = new JForm();
+    private JPreviewPane previewPane = new JPreviewPane();
 
-    FixtureEditorDialog(ArrayList<LightDefinition> existingLights) {
-        super();
+    FixtureEditorDialog(Window owner, ArrayList<LightDefinition> existingLights) {
+        super(owner, ModalityType.APPLICATION_MODAL);
 
         setTitle("Fixture Editor");
         setModal(true);
@@ -44,25 +45,26 @@ class FixtureEditorDialog extends JDialog {
             }
         });
 
-        leftContainer.add(table, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 2, 1, 1.0f, 1.0f, true, true));
-        leftContainer.add(new JButton(new AbstractAction("+") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addNewFixture();
-            }
-        }), GridBagLayoutHelper.getGridBagLayoutConstraints(0, 1, GridBagConstraints.EAST, 1, 1, 1.0f, 0, false, false));
+        JActionButton addButton = new JActionButton("+", e -> addNewFixture());
+        JActionButton removeButton = new JActionButton("-", e -> removeSelectedFixture());
 
-        leftContainer.add(new JButton(new AbstractAction("-") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                removeSelectedFixture();
-            }
-        }), GridBagLayoutHelper.getGridBagLayoutConstraints(1, 1, GridBagConstraints.EAST, 1, 1, 0, 0, false, false));
+        leftContainer.add(table, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 2, 1, 1.0f, 1.0f, true, true));
+        leftContainer.add(addButton, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 1, GridBagConstraints.EAST, 1, 1, 1.0f, 0, false, false));
+        leftContainer.add(removeButton, GridBagLayoutHelper.getGridBagLayoutConstraints(1, 1, GridBagConstraints.EAST, 1, 1, 0, 0, false, false));
+
+        JPanel rightContainer = new JPanel();
+        rightContainer.setLayout(new BoxLayout(rightContainer, BoxLayout.Y_AXIS));
+
+        previewPane.setPreferredSize(new Dimension(0, 150));
 
         form.setPreferredSize(new Dimension(500, 300));
+        form.addChangeListener(e -> previewPane.repaint());
+
+        rightContainer.add(form);
+        rightContainer.add(previewPane);
 
         contentPane.add(leftContainer, BorderLayout.WEST);
-        contentPane.add(form, BorderLayout.CENTER);
+        contentPane.add(rightContainer, BorderLayout.CENTER);
         contentPane.add(new JLabel("Fixture modifications will not be applied to existing plans.", JLabel.CENTER), BorderLayout.SOUTH);
 
         setContentPane(contentPane);
@@ -78,25 +80,28 @@ class FixtureEditorDialog extends JDialog {
 
     private void loadFixture(int index) {
 
+        form.empty();
+
         // check the row exists
         if (index >= table.getRowCount() || index < 0) {
-            form.empty();
+            previewPane.setLightDefinition(null);
             return;
         }
 
         final LightDefinition selection = lightDefinitions.get(index);
 
-        form.empty();
+        previewPane.setLightDefinition(selection);
+
         form.addTextField("Name:", selection.getDisplayName(), value -> {
             selection.setDisplayName(value);
             updateFixtureNameInList(index, value);
         });
+
         form.addTextField("Label:", selection.getLabel(), selection::setLabel);
         form.addColorField("Display Color:", selection.getDisplayColor(), selection::setDisplayColor);
         form.addComboBoxField("Shape:", new String[] { "Circle", "Square", "Triangle", "Diamond", "Pentagon", "Hexagon", "Heptagon", "Octagon", "Nonagon", "Decagon" }, new LightShape[] { LightShape.CIRCLE, LightShape.SQUARE, LightShape.TRIANGLE, LightShape.DIAMOND, LightShape.PENTAGON, LightShape.HEXAGON, LightShape.HEPTAGON, LightShape.OCTAGON, LightShape.NONAGON, LightShape.DECAGON }, selection.getShape(), selection::setShape);
 
-        boolean fieldAngleIsRange = selection.getFieldAngle() == 0 && selection.getFieldAngleMin() > 0 && selection.getFieldAngleMax() > 0;
-        FormElement<JCheckBox> checkBox = form.addCheckBox("Field angle is a range", fieldAngleIsRange, value -> {});
+        FormElement<JCheckBox> checkBox = form.addCheckBox("Field angle is a range", selection.isFieldAngleRange(), value -> {});
         FormElement<JSpinner> fieldAngleSpinner = form.addNumberField("Field Angle:", selection.getFieldAngle(), value -> selection.setFieldAngle(value.floatValue()), 0, 90, 0.1, 1);
         FormElement<JSpinner> fieldAngleMinSpinner = form.addNumberField("Field Angle (min):", selection.getFieldAngleMin(), value -> selection.setFieldAngleMin(value.floatValue()), 0, 90, 0.1, 1);
         FormElement<JSpinner> fieldAngleMaxSpinner = form.addNumberField("Field Angle (max):", selection.getFieldAngleMax(), value -> selection.setFieldAngleMax(value.floatValue()), 0, 90, 0.1, 1);
@@ -112,6 +117,10 @@ class FixtureEditorDialog extends JDialog {
             fieldAngleMinSpinner.getComponent().setValue(selected ? 30 : 0);
             fieldAngleMaxSpinner.getComponent().setValue(selected ? 50 : 0);
         });
+
+        fieldAngleSpinner.setVisible(!selection.isFieldAngleRange());
+        fieldAngleMinSpinner.setVisible(selection.isFieldAngleRange());
+        fieldAngleMaxSpinner.setVisible(selection.isFieldAngleRange());
 
         fieldAngleMinSpinner.getComponent().addChangeListener(e -> {
             double minValue = ((Number)fieldAngleMinSpinner.getComponent().getValue()).doubleValue();
@@ -129,9 +138,6 @@ class FixtureEditorDialog extends JDialog {
                 minSpinner.setValue(maxValue);
 
         });
-
-        for (ActionListener listener : checkBox.getComponent().getActionListeners())
-            listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
 
         form.addVerticalGlue();
         revalidate();

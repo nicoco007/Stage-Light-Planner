@@ -119,10 +119,6 @@ public class JLight extends JFixture {
         propertyUpdated();
     }
 
-    boolean isFieldAngleRange() {
-        return getModel().getFieldAngle() == 0 && getModel().getFieldAngleMin() <= getModel().getFieldAngleMax();
-    }
-
     public int getBeamIntensity() {
         return beamIntensity;
     }

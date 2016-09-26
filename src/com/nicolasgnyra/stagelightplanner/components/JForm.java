@@ -5,16 +5,21 @@ import com.nicolasgnyra.stagelightplanner.JComboBoxItem;
 import com.nicolasgnyra.stagelightplanner.helpers.GridBagLayoutHelper;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 @SuppressWarnings("Convert2Diamond")
 public class JForm extends JPanel {
+    private ArrayList<ChangeListener> changeListeners = new ArrayList<>();
+
     public JForm() {
         super(new GridBagLayout());
     }
@@ -80,6 +85,7 @@ public class JForm extends JPanel {
 
             void update() {
                 onUpdate.accept(input.getText());
+                valueChanged(input);
             }
         });
 
@@ -101,7 +107,10 @@ public class JForm extends JPanel {
 
         add(spinner, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
-        spinner.addChangeListener((e) -> onUpdate.accept(((Number)spinner.getValue()).doubleValue()));
+        spinner.addChangeListener((e) -> {
+            onUpdate.accept(((Number)spinner.getValue()).doubleValue());
+            valueChanged(spinner);
+        });
 
         revalidate();
 
@@ -115,7 +124,10 @@ public class JForm extends JPanel {
 
         add(colorChooser, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
-        colorChooser.addColorChangedListener(onUpdate::accept);
+        colorChooser.addColorChangedListener(value -> {
+            onUpdate.accept(value);
+            valueChanged(colorChooser);
+        });
 
         revalidate();
 
@@ -145,6 +157,7 @@ public class JForm extends JPanel {
             @SuppressWarnings("unchecked")
             T value = ((JComboBoxItem<T>)comboBox.getSelectedItem()).getValue();
             onUpdate.accept(value);
+            valueChanged(comboBox);
         });
 
         revalidate();
@@ -157,7 +170,10 @@ public class JForm extends JPanel {
 
         final JCheckBox checkBox = new JCheckBox(text, value);
 
-        checkBox.addActionListener(e -> onUpdate.accept(checkBox.isSelected()));
+        checkBox.addActionListener(e -> {
+            onUpdate.accept(checkBox.isSelected());
+            valueChanged(checkBox);
+        });
 
         add(checkBox, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
@@ -171,7 +187,10 @@ public class JForm extends JPanel {
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, value);
 
-        slider.addChangeListener(e -> onUpdate.accept(slider.getValue()));
+        slider.addChangeListener(e -> {
+            onUpdate.accept(slider.getValue());
+            valueChanged(slider);
+        });
 
         slider.setPreferredSize(new Dimension(0, 40));
         slider.setPaintLabels(true);
@@ -194,5 +213,14 @@ public class JForm extends JPanel {
         removeAll();
         revalidate();
         repaint();
+    }
+
+    private void valueChanged(JComponent source) {
+        for (ChangeListener changeListener : changeListeners)
+            changeListener.stateChanged(new ChangeEvent(source));
+    }
+
+    public void addChangeListener(ChangeListener changeListener) {
+        changeListeners.add(changeListener);
     }
 }
