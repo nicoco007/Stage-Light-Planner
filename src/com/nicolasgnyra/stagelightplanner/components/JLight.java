@@ -11,13 +11,13 @@ import java.awt.*;
  */
 public class JLight extends JStageElement {
 
-    private LightDefinition model;  // light definition used as a "model"
-    private float rotation;         // light rotation (flat on screen)
-    private float angle;            // light angle (in/out of screen)
-    private float fieldAngle;       // field angle (if the definition field angle is a range)
-    private Color beamColor;        // beam color
-    private String connectionId;    // connection ID (DMX, plug, etc.)
-    private int beamIntensity;      // beam intensity, from 0 to 100
+    private final LightDefinition model;    // light definition used as a "model"
+    private float rotation;                 // light rotation (flat on screen)
+    private float angle;                    // light angle (in/out of screen)
+    private float fieldAngle;               // field angle (if the definition field angle is a range)
+    private Color beamColor;                // beam color
+    private String connectionId;            // connection ID (DMX, plug, etc.)
+    private int beamIntensity;              // beam intensity, from 0 to 100
 
     /**
      * JLight(int, int, LightDefinition) Method:

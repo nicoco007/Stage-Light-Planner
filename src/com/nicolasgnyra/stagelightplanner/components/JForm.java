@@ -25,10 +25,10 @@ import java.util.function.Consumer;
  * @author Nicolas Gnyra
  * @version 1.0
  */
-@SuppressWarnings("Convert2Diamond") // removes some warnings that, if corrected, trigger errors
+@SuppressWarnings({"Convert2Diamond", "UnusedReturnValue"}) // removes some warnings that, if corrected, trigger errors
 public class JForm extends JPanel {
 
-    private ArrayList<ChangeListener> changeListeners = new ArrayList<>();  // list of change listeners
+    private final ArrayList<ChangeListener> changeListeners = new ArrayList<>();  // list of change listeners
 
     /**
      * JForm() Constructor:

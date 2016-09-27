@@ -3,7 +3,6 @@ package com.nicolasgnyra.stagelightplanner.transferables;
 import com.nicolasgnyra.stagelightplanner.components.JLightDefinition;
 
 import java.awt.datatransfer.*;
-import java.io.IOException;
 
 /**
  * StageElementTransferable Class:
@@ -16,7 +15,7 @@ import java.io.IOException;
  */
 public class StageElementTransferable implements Transferable, ClipboardOwner {
 
-    private Object data; // transfer data
+    private final Object data; // transfer data
 
     /**
      * StageElementTransferable(Object) Constructor:

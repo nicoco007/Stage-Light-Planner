@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 
 public class JLightDefinition extends JStageElementDefinition {
-    private LightDefinition definition;
+    private final LightDefinition definition;
 
     public JLightDefinition(LightDefinition definition) {
         super();

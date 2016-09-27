@@ -14,8 +14,8 @@ import javax.swing.*;
  * @param <T> Component type
  */
 public class FormElement <T extends JComponent> {
-    private JLabel label;   // field label
-    private T component;    // field input
+    private final JLabel label;   // field label
+    private final T component;    // field input
 
     /**
      * FormElement(JLabel, T) Constructor:

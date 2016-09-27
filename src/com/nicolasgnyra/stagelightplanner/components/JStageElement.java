@@ -15,15 +15,15 @@ import java.awt.event.*;
  */
 public abstract class JStageElement extends JComponent implements MouseListener, MouseMotionListener, KeyListener {
 
-    protected boolean dragging = false;                         // whether the component is currently being dragged
+    private boolean dragging = false;                           // whether the component is currently being dragged
     private Point relativeMouseLocation = new Point();          // relative mouse position at start of drag
     protected JStagePlanner parent = new JStagePlanner(null);   // parent stage planner
 
-    protected int width = 0;    // element width
-    protected int height = 0;   // element height
-    protected int x = 0;        // element x coord
-    protected int y = 0;        // element y coord
-    protected Color color;      // element color
+    protected int width = 0;        // element width
+    protected int height = 0;       // element height
+    protected int x = 0;            // element x coord
+    protected int y = 0;            // element y coord
+    protected Color color;          // element color
 
     private boolean focus = false;      // whether the component is currently focused or not
     private final JPopupMenu popupMenu; // popup menu

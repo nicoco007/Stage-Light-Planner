@@ -12,8 +12,8 @@ package com.nicolasgnyra.stagelightplanner;
  * @param <T> Value type
  */
 public class ComboBoxItem<T> {
-    private String label;   // string displayed in combo box
-    private T value;        // value of the item
+    private final String label;   // string displayed in combo box
+    private final T value;        // value of the item
 
     /**
      * ComboBoxItem(String, T) Method:

@@ -33,12 +33,12 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private static final int cellSize = 10;             // cell size, in px
     private static final int largeCellMultiplier = 10;  // large cell size, multiplier of cellSize
 
-    private JScrollPane scrollPane;     // drawing pane scroll pane
-    private JLayeredPane drawingPane;   // graphics container
-    private Point dragOrigin = null;    // drag origin (for scroll pane)
+    private final JScrollPane scrollPane;       // drawing pane scroll pane
+    private final JLayeredPane drawingPane;     // graphics container
+    private Point dragOrigin = null;            // drag origin (for scroll pane)
 
-    private int acceptableDnDActions = DnDConstants.ACTION_COPY;    // acceptable drag and drop actions
-    private JPropertiesContainer propertiesContainer;               // properties container
+    private final int acceptableDnDActions = DnDConstants.ACTION_COPY;    // acceptable drag and drop actions
+    private final JPropertiesContainer propertiesContainer;               // properties container
 
     private float zoom = 1.0f;              // current zoom
     private final float minZoom = 0.25f;    // minimum zoom
@@ -478,7 +478,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
         static final int FIXTURE_LAYER = 1;
         static final int LABEL_LAYER = 2;
 
-        private Dimension size;     // size without zoom
+        private final Dimension size;     // size without zoom
 
         /**
          * DrawingPane(width, height) Constructor:

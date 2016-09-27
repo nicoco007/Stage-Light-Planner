@@ -20,8 +20,8 @@ import javax.swing.colorchooser.AbstractColorChooserPanel;
  */
 class JColorChooserButton extends JButton {
 
-    private Color current = null;                                       // currently selected color
-    private List<ColorChangedListener> listeners = new ArrayList<>();   // change listeners
+    private Color current = null;                                               // currently selected color
+    private final List<ColorChangedListener> listeners = new ArrayList<>();     // change listeners
 
     /**
      * JColorChooserButton(Color) Constructor:
@@ -111,6 +111,7 @@ class JColorChooserButton extends JButton {
      *
      * @param listener Listener to add.
      */
+    @SuppressWarnings("WeakerAccess")
     public void addColorChangedListener(ColorChangedListener listener) {
         listeners.add(listener);
     }
@@ -130,7 +131,7 @@ class JColorChooserButton extends JButton {
      * @param height Height of the icon
      * @return The generated icon.
      */
-    public static ImageIcon createIcon(Color main, int width, int height) {
+    private static ImageIcon createIcon(Color main, int width, int height) {
 
         // create new RGB image
         BufferedImage image = new BufferedImage(width, height, java.awt.image.BufferedImage.TYPE_INT_RGB);

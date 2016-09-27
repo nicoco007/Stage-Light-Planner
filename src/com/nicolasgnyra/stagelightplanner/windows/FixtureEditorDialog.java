@@ -24,11 +24,11 @@ import java.util.ArrayList;
  */
 class FixtureEditorDialog extends JDialog {
 
-    private JTable table;                                   // list of existing definitions
-    private DefaultTableModel tableModel;                   // existing definitions table model
-    private ArrayList<LightDefinition> lightDefinitions;    // light of light definitions
-    private JForm form = new JForm();                       // editing form
-    private JPreviewPane previewPane = new JPreviewPane();  // preview pane
+    private final JTable table;                                   // list of existing definitions
+    private final DefaultTableModel tableModel;                   // existing definitions table model
+    private final ArrayList<LightDefinition> lightDefinitions;    // light of light definitions
+    private final JForm form = new JForm();                       // editing form
+    private final JPreviewPane previewPane = new JPreviewPane();  // preview pane
 
     /**
      * FixtureEditorDialog(Window, ArrayList<LightDefinition>) Constructor:

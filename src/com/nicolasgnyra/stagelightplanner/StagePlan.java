@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class StagePlan {
-    private ArrayList<JStageElement> stageElements; // list of stage elements
+    private final ArrayList<JStageElement> stageElements; // list of stage elements
 
     /**
      * StagePlan(ArrayList<JStageElement>) Constructor:

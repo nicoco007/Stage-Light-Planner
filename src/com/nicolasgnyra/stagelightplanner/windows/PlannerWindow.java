@@ -12,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -27,8 +26,8 @@ import java.util.ArrayList;
 public class PlannerWindow extends JFrame implements WindowListener {
 
     private File loadedFile = null;                         // currently loaded file
-    private JStagePlanner stagePlanner;                     // stage planner
-    private JFixturesContainer fixtureList;                 // fixtures container
+    private final JStagePlanner stagePlanner;               // stage planner
+    private final JFixturesContainer fixtureList;           // fixtures container
     private ArrayList<LightDefinition> lightDefinitions;    // list of light definitions
 
     /**

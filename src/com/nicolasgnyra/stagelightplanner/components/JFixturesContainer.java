@@ -17,7 +17,7 @@ import java.awt.*;
  */
 public class JFixturesContainer extends JPanel {
 
-    private JPanel definitionContainer;     // Light definition container
+    private final JPanel definitionContainer;     // Light definition container
 
     /**
      * JFixturesContainer() Constructor:

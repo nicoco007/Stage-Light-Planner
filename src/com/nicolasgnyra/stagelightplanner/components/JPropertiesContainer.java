@@ -16,12 +16,12 @@ import java.awt.*;
  * @version 1.0
  */
 public class JPropertiesContainer extends JPanel {
-    private JTextArea titleLabel;       // large text displayed at the top of the container
-    private JPanel attributesPanel;     // subtitles displayed under the main title
-    private JForm propertiesPanel;      // form containing values that can be edited
+    private final JTextArea titleLabel;       // large text displayed at the top of the container
+    private final JPanel attributesPanel;     // subtitles displayed under the main title
+    private final JForm propertiesPanel;      // form containing values that can be edited
 
     // default font for labels (by default, JTextAreas use a fixed-width font
-    private Font defaultLabelFont = UIManager.getLookAndFeelDefaults().getFont("Label.font");
+    private final Font defaultLabelFont = UIManager.getLookAndFeelDefaults().getFont("Label.font");
 
     /**
      * JPropertiesContainer() Constructor:
