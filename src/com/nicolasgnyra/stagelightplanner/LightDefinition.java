@@ -2,7 +2,7 @@ package com.nicolasgnyra.stagelightplanner;
 
 import java.awt.*;
 
-public class LightDefinition extends FixtureDefinition implements Cloneable {
+public class LightDefinition implements Cloneable {
     private String displayName  = "";
     private String label        = "";
     private LightShape shape    = LightShape.SQUARE;
@@ -10,8 +10,6 @@ public class LightDefinition extends FixtureDefinition implements Cloneable {
     private float fieldAngle    = 0.0f;
     private float fieldAngleMin = 0.0f;
     private float fieldAngleMax = 0.0f;
-
-    public LightDefinition() { }
 
     public LightDefinition(String displayName, String label, LightShape shape, Color displayColor, float fieldAngle) {
         this.displayName = displayName;
