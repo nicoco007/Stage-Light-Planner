@@ -90,9 +90,12 @@ public class JLight extends JStageElement {
 
             // check if the bounding boxes overlap, and if so, set the batten to the current batten and exit the for loop
             if (Math.max(batten.getX(), getX()) < Math.min(batten.getX() + batten.getWidth(), getX() + getWidth()) && Math.max(batten.getY(), getY()) < Math.min(batten.getY() + batten.getHeight(), getY() + getHeight())) {
+
                 overlappingBatten = batten;
                 break;
+
             }
+
         }
 
         // return the found (maybe) batten

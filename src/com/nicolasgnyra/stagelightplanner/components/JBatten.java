@@ -43,6 +43,17 @@ public class JBatten extends JStageElement {
         this.orientation = orientation;
     }
 
+    @Override
+    void reposition() {
+
+        // set width & height of the batten
+        width = orientation == Orientation.HORIZONTAL ? length : thickness;
+        height = orientation == Orientation.VERTICAL ? length : thickness;
+
+        // call superclass method
+        super.reposition();
+    }
+
     /**
      * paintElement(Graphics) Method:
      * Called when the stage element needs to be painted.
@@ -60,10 +71,6 @@ public class JBatten extends JStageElement {
 
         // cast graphics to 2D graphics
         Graphics2D g2d = (Graphics2D)g;
-
-        // set width & height of the batten
-        width = orientation == Orientation.HORIZONTAL ? length : thickness;
-        height = orientation == Orientation.VERTICAL ? length : thickness;
 
         // set color based on focus state
         g2d.setColor(hasInnerFocus() ? getBackground().brighter() : getBackground());

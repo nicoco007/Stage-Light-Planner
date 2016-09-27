@@ -570,6 +570,9 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
             // enable anti-aliasing
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+            // make sure all battens are properly placed & sized
+            getBattens().forEach(JBatten::reposition);
+
             // iterate through stage elements
             getLights().forEach(light -> {
 
