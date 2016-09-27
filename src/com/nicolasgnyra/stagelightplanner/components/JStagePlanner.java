@@ -337,7 +337,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      */
     @Override
     public void dragEnter(DropTargetDragEvent e) {
-        if (!isAcceptableDrag(e)) {
+        if (isInvalidDrag(e)) {
             e.rejectDrag();
             return;
         }
@@ -359,7 +359,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      */
     @Override
     public void dragOver(DropTargetDragEvent e) {
-        if (!isAcceptableDrag(e)) {
+        if (isInvalidDrag(e)) {
             e.rejectDrag();
             return;
         }
@@ -381,7 +381,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      */
     @Override
     public void dropActionChanged(DropTargetDragEvent e) {
-        if (!isAcceptableDrag(e)) {
+        if (isInvalidDrag(e)) {
             e.rejectDrag();
             return;
         }
@@ -447,19 +447,19 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
     /**
      * isAcceptableDrag(DropTargetDragEvent) Method:
-     * Checks if a drag is acceptable or not.
+     * Checks if a drag is invalid or not.
      *
      * Input: Drop target drag event.
      *
-     * Process: Checks if the data flavor & the source action are acceptable.
+     * Process: Checks if the data flavor & the source action are invalid.
      *
      * Output: Whether the above check succeeded or failed.
      *
      * @param e Drop target drag event.
-     * @return Whether the data flavor & the source action are acceptable or not.
+     * @return Whether the data flavor & the source action are invalid or not.
      */
-    private boolean isAcceptableDrag(DropTargetDragEvent e) {
-        return e.isDataFlavorSupported(StageElementTransferable.getObjectFlavor()) && (e.getSourceActions() & acceptableDnDActions) != 0;
+    private boolean isInvalidDrag(DropTargetDragEvent e) {
+        return !e.isDataFlavorSupported(StageElementTransferable.getObjectFlavor()) || (e.getSourceActions() & acceptableDnDActions) == 0;
     }
 
     /**
