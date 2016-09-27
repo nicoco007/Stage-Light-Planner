@@ -7,11 +7,56 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
+/**
+ * PaintHelper Class:
+ * Contains static methods used to paint components & shapes.
+ *
+ * Date: 2016-09-27
+ *
+ * @author Nicolas Gnyra
+ * @version 1.0
+ */
 public class PaintHelper {
+
+    /**
+     * getRegularPolygon(int, int, int, int, int) Method:
+     * Gets a regular polygon with the specified amount of sides, x pos, y pos, width and height.
+     *
+     * Input: Sides, X/Y pos, dimensions.
+     *
+     * Process: Calls overloads methods with default angle of 0.
+     *
+     * Output: Regular polygon with specified amount of sides.
+     *
+     * @param sides Amount of sides
+     * @param startX X position
+     * @param startY Y position
+     * @param width Width
+     * @param height Height
+     * @return Regular polygon with specified amount of sides.
+     */
     public static Polygon getRegularPolygon(int sides, int startX, int startY, int width, int height) {
         return getRegularPolygon(sides, startX, startY, width, height, 0);
     }
 
+    /**
+     * getRegularPolygon(int, int, int, int, int, double) Method:
+     * Gets a regular polygon with the specified amount of sides, x pos, y pos, width, height, and angle.
+     *
+     * Input: Sides, X/Y pos, dimensions, angle.
+     *
+     * Process: Using sine/cosine methods, creates a polygon with specified width & height and translates and rotates it
+     *
+     * Output: Regular polygon with specified amount of sides.
+     *
+     * @param sides Amount of sides
+     * @param startX X position
+     * @param startY Y position
+     * @param width Width
+     * @param height Height
+     * @param angle Angle
+     * @return Regular polygon with specified amount of sides.
+     */
     public static Polygon getRegularPolygon(int sides, int startX, int startY, int width, int height, double angle) {
 
         // add to angle so flat side of poly is on bottom
@@ -30,84 +75,160 @@ public class PaintHelper {
         double[] xpoints = new double[sides];
         double[] ypoints = new double[sides];
 
+        // iterate through side count
         for (int i = 0; i < sides; i++) {
+
+            // get x and y coordinates of point
             double x = width / 2 * Math.cos(i * theta + angle) + width / 2;
             double y = height / 2 * Math.sin(i * theta + angle) + height / 2;
 
+            // set array values
             xpoints[i] = x;
             ypoints[i] = y;
 
-            if (x < minX) minX = x;
-            if (x > maxX) maxX = x;
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
+            // set max values
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+
         }
 
+        // create polygon
         Polygon polygon = new Polygon();
 
-        System.out.println(sides);
-
+        // iterate through sides
         for (int i = 0; i < sides; i++) {
+
+            // stretch and translate point
             xpoints[i] = startX + stretchPoint(xpoints[i], width, minX, maxX);
             ypoints[i] = startY + stretchPoint(ypoints[i], height, minY, maxY);
 
+            // add point to polygon
             polygon.addPoint((int)Math.round(xpoints[i]), (int)Math.round(ypoints[i]));
+
         }
 
+        // return polygon
         return polygon;
     }
 
+    /**
+     * stretchPoint(double, double, double, double) Method:
+     * Stretches a point so the shape it is connected to properly fills the specified bounds.
+     *
+     * Input: 1D point, size ("width"), min, max, where 0 <= min <= max <= size
+     *
+     * Process: Calculates necessary displacement in "left" and "right" directions, and applies it to the point.
+     *
+     * Output: Displaced point.
+     *
+     * @param point 1D point
+     * @param size "Width"
+     * @param min Minimum value
+     * @param max Maximum value
+     * @return Displaced point.
+     */
     private static double stretchPoint(double point, double size, double min, double max) {
+
+        // check point isn't already at bounds
         if (point > 0 && point < size) {
+
+            // calculate displacement
             double minDispl = min * (point - min) / (size - min);
             double maxDispl = (size - max) * (max - point) / max;
 
+            // apply displacement
             point = point - min + minDispl;
             point = point + (size - max) - maxDispl;
+
         }
 
+        // return displaced point
         return point;
     }
-    
-    public static void drawShape(Graphics g, LightShape shape, int width, int height) {
-        drawShape(g, shape, 0, 0, width, height);
-    }
 
+    /**
+     * drawShape(Graphics, LightShape, int, int) Method:
+     * Draws a shape with the specified width/height.
+     *
+     * Input: Graphics instance, coordinates, dimensions, shape.
+     *
+     * Process: Draws based on specified shape.
+     *
+     * Output: None.
+     *
+     * @param g Graphics instance
+     * @param shape Shape to draw
+     * @param x X position
+     * @param y Y position
+     * @param width Width of shape
+     * @param height Height of shape
+     */
     public static void drawShape(Graphics g, LightShape shape, int x, int y, int width, int height) {
+
+        // draw based on shape
         switch(shape) {
+
             case TRIANGLE:
                 g.fillPolygon(PaintHelper.getRegularPolygon(3, x, y, width, height));
                 break;
+
             case SQUARE:
                 g.fillRect(x, y, width, height);
                 break;
+
             case CIRCLE:
                 g.fillOval(x, y, width, height);
                 break;
+
             case DIAMOND:
                 g.fillPolygon(PaintHelper.getRegularPolygon(4, x, y, width, height, Math.PI / 4));
                 break;
+
             case PENTAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(5, x, y, width, height));
                 break;
+
             case HEXAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(6, x, y, width, height));
                 break;
+
             case HEPTAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(7, x, y, width, height));
                 break;
+
             case OCTAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(8, x, y, width, height));
                 break;
+
             case NONAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(9, x, y, width, height));
                 break;
+
             case DECAGON:
                 g.fillPolygon(PaintHelper.getRegularPolygon(10, x, y, width, height));
                 break;
+
         }
+
     }
 
+    /**
+     * scaleFont(String, Dimension, Graphics) Method:
+     * Scale font to (roughly) fit the specified bounds.
+     *
+     * Input: Text, bounds, graphics instance.
+     *
+     * Process: Using the notion that "font height = font size", calculates the size of the font based on string width.
+     *
+     * Output: Scaled font.
+     *
+     * @param text Text
+     * @param dimension Bounds
+     * @param g Graphics instance
+     * @return Scaled font.
+     */
     private static Font scaleFont(String text, Dimension dimension, Graphics g) {
         Font font = g.getFont().deriveFont((float) dimension.height);
         int strWidth = g.getFontMetrics(font).stringWidth(text);
@@ -115,10 +236,24 @@ public class PaintHelper {
         return g.getFont().deriveFont(fontSize);
     }
 
-    public static void drawScaledString(Graphics2D g2d, String text, int width, int height, int padding) {
-        drawScaledString(g2d, text, 0, 0, width, height, padding);
-    }
-
+    /**
+     * drawScaledString(Graphics2D, String, int, int, int, int, int) Method:
+     * Draws a scaled string in the specified bounds.
+     *
+     * Input: Graphics instance, text, coordinates, bounding box, padding.
+     *
+     * Process: Scales the font appropriately and draws a centered string.
+     *
+     * Output: None.
+     *
+     * @param g2d Graphics instance
+     * @param text Text
+     * @param x X position
+     * @param y Y position
+     * @param width Bounding box width
+     * @param height Bounding box height
+     * @param padding Padding (approximate)
+     */
     public static void drawScaledString(Graphics2D g2d, String text, int x, int y, int width, int height, int padding) {
         g2d.setFont(scaleFont(text, new Dimension(width - padding * 2, height - padding * 2), g2d));
 
@@ -127,6 +262,19 @@ public class PaintHelper {
         g2d.drawString(text, x + (width - fm.stringWidth(text)) / 2, y + (height - fm.getHeight()) / 2 + fm.getAscent());
     }
 
+    /**
+     * getHueBasedOnBackgroundColor(Color) Method:
+     * Gets a hue (black or white) based on the luminance of the specified color (for contrast).
+     *
+     * Input: Background color.
+     *
+     * Process: Calculates luminance and returns black or white based on that.
+     *
+     * Output: Black or white depending on contrast needed.
+     *
+     * @param bgColor Background color
+     * @return Black or white depending on contrast needed.
+     */
     public static Color getHueBasedOnBackgroundColor(Color bgColor) {
 
         // luminance (similar to brightness) calculation based on HDTV standards (http://www.itu.int/rec/R-REC-BT.709)
@@ -137,6 +285,21 @@ public class PaintHelper {
 
     }
 
+    /**
+     * getBeamRect(int, double, double) Method:
+     * Gets the rectangle of the ellipse of the beam of the light with the specified height, field angle and angle.
+     *
+     * Input: Batten height, field angle, angle.
+     *
+     * Process: Calculates beam location & size using on laws of sines and cosines.
+     *
+     * Output: Beam rectangle.
+     *
+     * @param battenHeight Height of the batten on which the light is
+     * @param fieldAngle Field angle of the light
+     * @param angle Angle of the light
+     * @return Beam rectangle
+     */
     public static Rectangle getBeamRect(int battenHeight, double fieldAngle, double angle) {
 
         // create ellipse rectangle (container)
@@ -163,6 +326,30 @@ public class PaintHelper {
 
     }
 
+    /**
+     * drawBeam(Graphics2D, int, int, int, int, int, double, int Color, int, double, double, boolean) Method:
+     * Draws the beam of the light with the specified characteristics.
+     *
+     * Input: Graphics instance, light coordinates & size, field angle, batten height, beam color, beam intensity,
+     * rotation, angle, whether to show outlines or not.
+     *
+     * Process: Gets the beam rectangle, transforms (rotates) it, and draws it.
+     *
+     * Output: None.
+     *
+     * @param g2d Graphics instance.
+     * @param lightX Light X position
+     * @param lightY Light Y position
+     * @param lightWidth Light width
+     * @param lightHeight Light height
+     * @param fieldAngle Light field angle
+     * @param battenHeight Batten height
+     * @param beamColor Beam color
+     * @param beamIntensity Beam intensity
+     * @param rotation Light rotation
+     * @param angle Light angle
+     * @param showLightOutlines Whether to show light outlines or not
+     */
     public static void drawBeam(Graphics2D g2d, int lightX, int lightY, int lightWidth, int lightHeight, double fieldAngle, int battenHeight, Color beamColor, int beamIntensity, double rotation, double angle, boolean showLightOutlines) {
 
         // get the color of the light
@@ -174,9 +361,6 @@ public class PaintHelper {
         // create & rotate transform according to user input
         AffineTransform transform = new AffineTransform();
         transform.rotate(-Math.toRadians(rotation) + Math.PI / 2, lightX + lightWidth / 2, lightY + lightHeight / 2);
-
-        // enable anti-aliasing
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // set color according to user input (add 50% opacity)
         g2d.setColor(color);
@@ -210,9 +394,6 @@ public class PaintHelper {
             g2d.setStroke(previousStroke);
 
         }
-
-        // restore anti-aliasing setting to default
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 
     }
 }

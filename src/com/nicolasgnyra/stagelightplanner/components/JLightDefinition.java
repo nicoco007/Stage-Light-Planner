@@ -36,12 +36,12 @@ public class JLightDefinition extends JStageElementDefinition {
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(definition.getDisplayColor());
-        PaintHelper.drawShape(g2d, definition.getShape(), getWidth(), getHeight());
+        PaintHelper.drawShape(g2d, definition.getShape(), 0, 0, getWidth(), getHeight());
 
         g2d.setColor(PaintHelper.getHueBasedOnBackgroundColor(definition.getDisplayColor()));
         g2d.setFont(g2d.getFont().deriveFont(50.0f));
 
-        PaintHelper.drawScaledString(g2d, definition.getLabel(), getWidth(), getHeight(), 5);
+        PaintHelper.drawScaledString(g2d, definition.getLabel(), 0, 0, getWidth(), getHeight(), 5);
     }
 
     /**

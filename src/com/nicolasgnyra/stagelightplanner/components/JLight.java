@@ -137,14 +137,14 @@ public class JLight extends JStageElement {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // draw the light's shapae
-        PaintHelper.drawShape(g, getModel().getShape(), getWidth(), getHeight());
+        PaintHelper.drawShape(g, getModel().getShape(), 0, 0, getWidth(), getHeight());
 
         // check if there is a batten
         if (getOverlappingBatten() != null) {
 
             // set color based on background color & draw connection ID
             g2d.setColor(PaintHelper.getHueBasedOnBackgroundColor(color));
-            PaintHelper.drawScaledString(g2d, connectionId, getWidth(), getHeight(), 5);
+            PaintHelper.drawScaledString(g2d, connectionId, 0, 0, getWidth(), getHeight(), 5);
 
         }
 

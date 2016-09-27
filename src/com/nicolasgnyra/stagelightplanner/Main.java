@@ -11,6 +11,7 @@ public class Main {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             System.out.println("Failed to set look and feel to system theme: " + ex.getMessage());
+            ex.printStackTrace();
         }
 
         PlannerWindow window = new PlannerWindow();

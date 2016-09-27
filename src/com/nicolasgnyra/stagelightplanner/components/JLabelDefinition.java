@@ -53,7 +53,7 @@ public class JLabelDefinition extends JStageElementDefinition {
         // cast graphics to 2D graphics, enable anti-aliasing, and draw 'Label'.
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        PaintHelper.drawScaledString(g2d, "Label", getWidth(), getHeight(), 0);
+        PaintHelper.drawScaledString(g2d, "Label", 0, 0, getWidth(), getHeight(), 0);
 
     }
 

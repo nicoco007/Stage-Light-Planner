@@ -23,10 +23,10 @@ import java.awt.*;
  * GridBagLayoutHelper Class
  * Contains static methods to easily add components to GridBagLayouts
  *
- * Date :2016-05-31
+ * Date: 2016-09-27
  *
  * @author Nicolas Gnyra
- * @version 1.0
+ * @version 2.0
  */
 public class GridBagLayoutHelper {
 
@@ -68,31 +68,6 @@ public class GridBagLayoutHelper {
 
         // call overloads method with default values
         return getGridBagLayoutConstraints(x, y, anchor, 1, 1, 1, 1, false, false, new Insets(0, 0, 0, 0));
-
-    }
-
-    /**
-     * getGridBagLayoutConstraints(Container, JComponent, int, int) Method
-     * Adds a component to a GridBagLayout using the specified values.
-     *
-     * Input: Container, component, x and y coordinates, grid width and height, horizontal and vertical weight, and
-     * horizontal fill.
-     *
-     * Process: Calls overloads method with specified values and extra defaults.
-     *
-     * Ouput: None.
-     *
-     * @param x Grid column
-     * @param y Grid row
-     * @param anchor Alignment of the component
-     * @param gridwidth Grid width
-     * @param gridheight Grid height
-     */
-    public static GridBagConstraints getGridBagLayoutConstraints(int x, int y, int anchor,
-                                                                 int gridwidth, int gridheight) {
-
-        // call overloads method with default values
-        return getGridBagLayoutConstraints(x, y, anchor, gridwidth, gridheight, 0, 0, false, false, new Insets(0, 0, 0, 0));
 
     }
 
@@ -174,6 +149,19 @@ public class GridBagLayoutHelper {
 
     }
 
+    /**
+     * addVerticalGlue(Container, int) Method:
+     * Adds vertical glue to the GridBagLayout at the specified row.
+     *
+     * Input: Container & row.
+     *
+     * Process: Creates constraints that will fill as much as possible and adds an empty component to fill that space.
+     *
+     * Output: None.
+     *
+     * @param container GridBagLayout container
+     * @param gridy Row
+     */
     public static void addVerticalGlue(Container container, int gridy) {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTH;

@@ -10,10 +10,10 @@ import java.nio.charset.StandardCharsets;
  * FileStreamReader Class
  * Helper methods for the FileInputStream class.
  *
- * Date: 2016-06-13
+ * Date: 2016-09-27
  *
  * @author Nicolas Gnyra
- * @version 4.0
+ * @version 5.0
  */
 public class FileStreamReader extends FileInputStream {
 
@@ -132,6 +132,21 @@ public class FileStreamReader extends FileInputStream {
 
     }
 
+    /**
+     * readFloat Method:
+     * Reads a float (four bytes) from a file and returns it.
+     *
+     * Input: None.
+     *
+     * Process: Creates a buffer byte array, reads four bytes into the array, converts the bytes to a float, and returns it.
+     *
+     * Output: Read float.
+     *
+     * @since 5.0
+     *
+     * @return The read float
+     * @throws IOException Thrown when a reading error occurs
+     */
     public float readFloat() throws IOException {
 
         // create buffer

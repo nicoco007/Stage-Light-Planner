@@ -3,8 +3,6 @@ package com.nicolasgnyra.stagelightplanner.components;
 import com.nicolasgnyra.stagelightplanner.Orientation;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * JBatten Class:

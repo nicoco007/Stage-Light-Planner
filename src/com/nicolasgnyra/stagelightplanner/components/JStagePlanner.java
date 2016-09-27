@@ -547,22 +547,28 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
             // call super method
             super.paintComponent(g);
 
+            // cast graphics to 2D graphics
+            Graphics2D g2d = (Graphics2D) g;
+
             // set color to light gray
-            g.setColor(Color.lightGray);
+            g2d.setColor(Color.lightGray);
 
             // draw small cells only if zoom is >= 50% (lags too much otherwise)
             if (zoom >= 0.5f)
                 for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom))
                     for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom))
-                        g.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
+                        g2d.drawRect(i, j, i + (int)(cellSize * zoom), j + (int)(cellSize * zoom));
 
             // set color to darker gray
-            g.setColor(Color.gray);
+            g2d.setColor(Color.gray);
 
             // draw large cells
             for (int i = 0; i <= getWidth(); i += (int)(cellSize * zoom) * largeCellMultiplier)
                 for (int j = 0; j <= getHeight(); j += (int)(cellSize * zoom) * largeCellMultiplier)
-                    g.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
+                    g2d.drawRect(i, j, i + (int)(cellSize * zoom) * largeCellMultiplier, j + (int)(cellSize * zoom) * largeCellMultiplier);
+
+            // enable anti-aliasing
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // iterate through stage elements
             getLights().forEach(light -> {
@@ -573,11 +579,14 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 // if the batten was found
                 if (overlappingBatten != null) {
 
-                    PaintHelper.drawBeam((Graphics2D) g, light.getX(), light.getY(), light.getWidth(), light.getHeight(), light.getFieldAngle(), (int) (overlappingBatten.getHeightFromFloor() * getZoom()), light.getBeamColor(), light.getBeamIntensity(), light.getRotation(), light.getAngle(), showLightOutlines);
+                    PaintHelper.drawBeam(g2d, light.getX(), light.getY(), light.getWidth(), light.getHeight(), light.getFieldAngle(), (int) (overlappingBatten.getHeightFromFloor() * getZoom()), light.getBeamColor(), light.getBeamIntensity(), light.getRotation(), light.getAngle(), showLightOutlines);
 
                 }
 
             });
+
+            // disable anti-aliasing
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
             // revalidate to update scroll bars
             revalidate();

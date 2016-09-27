@@ -1,6 +1,10 @@
 /*
+ * Please note that I am not the author of this class. It does not fall under the same license as this program,
+ * and I give full credit to the original author, Rob Camick. A huge thanks to him.
+ *
  * WrapLayout Copyright © 2008 Rob Camick.
- * Taken from https://tips4java.wordpress.com/2008/11/06/wrap-layout/
+ *
+ * Borrowed from https://tips4java.wordpress.com/2008/11/06/wrap-layout/
  */
 
 package com.nicolasgnyra.stagelightplanner.layouts;
