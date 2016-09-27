@@ -158,6 +158,7 @@ public class PaintHelper {
         // make x negative if the angle is below 0 (square root is always positive)
         if (angle - fieldAngle / 2 < 0) rect.x = -rect.x;
 
+        // return the rectangle
         return rect;
 
     }
@@ -167,6 +168,7 @@ public class PaintHelper {
         // get the color of the light
         Color color = new Color(beamColor.getRed(), beamColor.getGreen(), beamColor.getBlue(), 128 * beamIntensity / 100);
 
+        // get the beam rectangle
         Rectangle rect = getBeamRect(battenHeight, fieldAngle, angle);
 
         // create & rotate transform according to user input
