@@ -69,14 +69,11 @@ public class JBatten extends JStageElement {
     @Override
     protected void paintElement(Graphics g) {
 
-        // cast graphics to 2D graphics
-        Graphics2D g2d = (Graphics2D)g;
-
         // set color based on focus state
-        g2d.setColor(hasInnerFocus() ? getBackground().brighter() : getBackground());
+        g.setColor(hasInnerFocus() ? getBackground().brighter() : getBackground());
 
         // fill background
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g.fillRect(0, 0, getWidth(), getHeight());
 
     }
 
