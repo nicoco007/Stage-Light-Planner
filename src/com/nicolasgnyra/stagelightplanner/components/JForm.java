@@ -124,18 +124,18 @@ public class JForm extends JPanel {
         if (multiline) {
 
             // create a text pane, and set the text, background and font
-            JTextPane textArea = new JTextPane();
-            textArea.setText(value);
-            textArea.setBackground(null);
-            textArea.setFont(new JTextField().getFont());
+            JTextPane textPane = new JTextPane();
+            textPane.setText(value);
+            textPane.setBackground(null);
+            textPane.setFont(UIManager.getLookAndFeelDefaults().getFont("Label.font"));
 
             // create a simple attribute set, set the paragraph spacing, and set the paragraph attributes of the text pane
             SimpleAttributeSet attributeSet = new SimpleAttributeSet();
             StyleConstants.setSpaceBelow(attributeSet, 5.0f);
-            textArea.setParagraphAttributes(attributeSet, false);
+            textPane.setParagraphAttributes(attributeSet, false);
 
             // add the text pane to the form in a scroll pane, with a minimum height of 100 pixels
-            add(new JScrollPane(textArea) {
+            add(new JScrollPane(textPane) {
                 @Override
                 public Dimension getPreferredSize() {
                     return new Dimension(super.getPreferredSize().width, 100);
@@ -143,7 +143,7 @@ public class JForm extends JPanel {
             }, GridBagLayoutHelper.getGridBagLayoutConstraints(1, getRow(), GridBagConstraints.CENTER, 1, 1, 0.5f, 0, true, false));
 
             // set input to created text pane
-            input = textArea;
+            input = textPane;
 
         } else {
 
@@ -215,7 +215,7 @@ public class JForm extends JPanel {
         // check if we have more than 1 decimal place
         if (decimalPlaces > 0) {
 
-            // create number editor with specfied amount of decimal places
+            // create number editor with specified amount of decimal places
             JSpinner.NumberEditor numberEditor = new JSpinner.NumberEditor(spinner, "0." + new String(new char[decimalPlaces]).replace('\0', '0'));
 
             // set amount of columns
@@ -350,7 +350,7 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addCheckBox(String, double, Consumer<Double>, double, double, double, int) Method:
+     * addCheckBoxField(String, double, Consumer<Double>, double, double, double, int) Method:
      * Adds a check box to the form.
      *
      * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
@@ -363,7 +363,7 @@ public class JForm extends JPanel {
      * @param value Starting value
      * @param onUpdate Update consumer
      */
-    public FormElement<JCheckBox> addCheckBox(String text, boolean value, Consumer<Boolean> onUpdate) {
+    public FormElement<JCheckBox> addCheckBoxField(String text, boolean value, Consumer<Boolean> onUpdate) {
 
         // add empty label (label is next to check box)
         JLabel label = addLabel("");
@@ -389,7 +389,7 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addSlider(String, double, Consumer<Double>, double, double, double, int) Method:
+     * addSliderField(String, double, Consumer<Double>, double, double, double, int) Method:
      * Adds a slider to the form.
      *
      * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
@@ -406,7 +406,7 @@ public class JForm extends JPanel {
      * @param majorTickInterval Amount between large ticks
      * @param onUpdate Update consumer
      */
-    public FormElement<JSlider> addSlider(String text, Integer value, Integer min, Integer max, int minorTickInterval, int majorTickInterval, Consumer<Integer> onUpdate) {
+    public FormElement<JSlider> addSliderField(String text, Integer value, Integer min, Integer max, int minorTickInterval, int majorTickInterval, Consumer<Integer> onUpdate) {
 
         // add label
         JLabel label = addLabel(text);

@@ -210,9 +210,6 @@ public abstract class JStageElement extends JComponent implements MouseListener,
         innerFocusGained(new FocusEvent(this, FocusEvent.FOCUS_GAINED));
         requestFocusInWindow();
 
-        // show properties in properties container
-        parent.getPropertiesContainer().showProperties(this);
-
     }
 
     /**
@@ -287,8 +284,8 @@ public abstract class JStageElement extends JComponent implements MouseListener,
             Point viewLocation = parent.getScrollPane().getViewport().getLocationOnScreen();
 
             // get x and y coordinates
-            int x = view.x + (e.getXOnScreen() - viewLocation.x - relativeMouseLocation.x);
-            int y = view.y + (e.getYOnScreen() - viewLocation.y - relativeMouseLocation.y);
+            int x = view.x + e.getXOnScreen() - viewLocation.x - relativeMouseLocation.x;
+            int y = view.y + e.getYOnScreen() - viewLocation.y - relativeMouseLocation.y;
 
             // add or remove 10 px from scrolled view x if outside boundaries
             if (e.getLocationOnScreen().x > viewLocation.x + view.width)
@@ -332,8 +329,13 @@ public abstract class JStageElement extends JComponent implements MouseListener,
      * @param e Focus event.
      */
     protected void innerFocusGained(FocusEvent e) {
+
+        // set focus to true & repaint
         focus = true;
         repaint();
+
+        // show properties in properties container
+        parent.getPropertiesContainer().showProperties(this);
     }
 
     /**
@@ -441,6 +443,36 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     }
 
+    /**
+     * equals(Object) Method:
+     * Checks whether the supplied object is equal to this instance.
+     *
+     * Input: Object to compare.
+     *
+     * Process: Compares all properties of this class.
+     *
+     * Output: Whether the objects are equal or not.
+     *
+     * @param obj Object to compare.
+     * @return Whether the objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        // check type
+        if (!(obj instanceof JStageElement))
+            return false;
+
+        // cast
+        JStageElement otherStageElement = (JStageElement) obj;
+
+        // check variables
+        return getGridX() == otherStageElement.getGridX() &&
+                getGridY() == otherStageElement.getGridY() &&
+                getColor().equals(otherStageElement.getColor());
+
+    }
+
     void setParent(JStagePlanner parent) {
         this.parent = parent;
     }
@@ -478,4 +510,9 @@ public abstract class JStageElement extends JComponent implements MouseListener,
 
     @Override
     public void keyReleased(KeyEvent e) { }
+
+    @Override
+    public String toString() {
+        return String.format(getClass().getCanonicalName() + "[x=%d,y=%d,color=%s]", x, y, color);
+    }
 }

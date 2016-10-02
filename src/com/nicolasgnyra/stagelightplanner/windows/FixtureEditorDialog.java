@@ -159,7 +159,7 @@ class FixtureEditorDialog extends JDialog {
         form.addComboBoxField("Shape:", new String[] { "Circle", "Square", "Triangle", "Diamond", "Pentagon", "Hexagon", "Heptagon", "Octagon", "Nonagon", "Decagon" }, new LightShape[] { LightShape.CIRCLE, LightShape.SQUARE, LightShape.TRIANGLE, LightShape.DIAMOND, LightShape.PENTAGON, LightShape.HEXAGON, LightShape.HEPTAGON, LightShape.OCTAGON, LightShape.NONAGON, LightShape.DECAGON }, selection.getShape(), selection::setShape);
 
         // add check box & spinners for field angles
-        FormElement<JCheckBox> checkBox = form.addCheckBox("Field angle is a range", selection.isFieldAngleRange(), value -> {});
+        FormElement<JCheckBox> checkBox = form.addCheckBoxField("Field angle is a range", selection.isFieldAngleRange(), value -> {});
         FormElement<JSpinner> fieldAngleSpinner = form.addNumberField("Field Angle:", selection.getFieldAngle(), value -> selection.setFieldAngle(value.floatValue()), 0, 90, 0.1, 1);
         FormElement<JSpinner> fieldAngleMinSpinner = form.addNumberField("Field Angle (min):", selection.getFieldAngleMin(), value -> selection.setFieldAngleMin(value.floatValue()), 0, 90, 0.1, 1);
         FormElement<JSpinner> fieldAngleMaxSpinner = form.addNumberField("Field Angle (max):", selection.getFieldAngleMax(), value -> selection.setFieldAngleMax(value.floatValue()), 0, 90, 0.1, 1);

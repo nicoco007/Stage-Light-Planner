@@ -211,7 +211,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      */
     void addLight(JLight light) {
         addStageElement(light);
-        drawingPane.setLayer(light, DrawingPane.FIXTURE_LAYER);
+        drawingPane.setLayer(light, DrawingPane.LIGHT_LAYER);
     }
 
     /**
@@ -475,7 +475,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
 
         // self explanatory
         static final int BATTEN_LAYER = 0;
-        static final int FIXTURE_LAYER = 1;
+        static final int LIGHT_LAYER = 1;
         static final int LABEL_LAYER = 2;
 
         private final Dimension size;     // size without zoom

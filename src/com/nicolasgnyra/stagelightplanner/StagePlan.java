@@ -32,7 +32,48 @@ public class StagePlan {
         this.stageElements = stageElements;
     }
 
+    /**
+     * equals(Object) Method:
+     * Checks whether the supplied object is equal to this instance.
+     *
+     * Input: Object to compare.
+     *
+     * Process: Compares all properties of this class.
+     *
+     * Output: Whether the objects are equal or not.
+     *
+     * @param obj Object to compare.
+     * @return Whether the objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        // check if instance of same class
+        if (!(obj instanceof StagePlan))
+            return false;
+
+        // cast
+        StagePlan otherStagePlan = (StagePlan) obj;
+
+        // check if array size is the same
+        if (getStageElements().size() != otherStagePlan.getStageElements().size())
+            return false;
+
+        // iterate through all elements and see if they are in the other object
+        for (JStageElement stageElement : getStageElements())
+            if (!otherStagePlan.getStageElements().contains(stageElement))
+                return false;
+
+        // return true
+        return true;
+    }
+
     public ArrayList<JStageElement> getStageElements() {
         return stageElements;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[stageElements=%s]", stageElements);
     }
 }

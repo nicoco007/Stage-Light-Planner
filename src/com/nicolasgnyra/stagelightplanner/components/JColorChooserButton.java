@@ -90,8 +90,8 @@ class JColorChooserButton extends JButton {
         repaint();
 
         // call all change listeners
-        for (ColorChangedListener l : listeners)
-            l.colorChanged(newColor);
+        for (ColorChangedListener listener : listeners)
+            listener.colorChanged(newColor);
 
     }
 
@@ -126,12 +126,12 @@ class JColorChooserButton extends JButton {
      *
      * Output: Generated ImageIcon.
      *
-     * @param main Main color of the icon
+     * @param color Main color of the icon
      * @param width Width of the icon
      * @param height Height of the icon
      * @return The generated icon.
      */
-    private static ImageIcon createIcon(Color main, int width, int height) {
+    private static ImageIcon createIcon(Color color, int width, int height) {
 
         // create new RGB image
         BufferedImage image = new BufferedImage(width, height, java.awt.image.BufferedImage.TYPE_INT_RGB);
@@ -140,7 +140,7 @@ class JColorChooserButton extends JButton {
         Graphics2D graphics = image.createGraphics();
 
         // set color to specified color
-        graphics.setColor(main);
+        graphics.setColor(color);
 
         // fill the rectangle
         graphics.fillRect(0, 0, width, height);

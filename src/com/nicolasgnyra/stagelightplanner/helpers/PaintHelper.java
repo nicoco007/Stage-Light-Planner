@@ -135,12 +135,12 @@ public class PaintHelper {
         if (point > 0 && point < size) {
 
             // calculate displacement
-            double minDispl = min * (point - min) / (size - min);
-            double maxDispl = (size - max) * (max - point) / max;
+            double displMin = Math.round(min * (point - min) / (size - min));
+            double displMax = Math.round((size - max) * (max - point) / max);
 
-            // apply displacement
-            point = point - min + minDispl;
-            point = point + (size - max) - maxDispl;
+            // apply displacement, make sure everything is bounds
+            point = Math.max(0, Math.min(point - min + displMin, size));
+            point = Math.max(0, Math.min(point + size - max - displMax, size));
 
         }
 
@@ -310,13 +310,13 @@ public class PaintHelper {
         double b2 = battenHeight / Math.sin(Math.PI / 2 - Math.toRadians(angle + fieldAngle / 2));
 
         // set width of ellipse based on the two above lengths and the law of cosines
-        rect.width = (int) Math.sqrt(Math.pow(b1, 2) + Math.pow(b2, 2) - 2 * b1 * b2 * Math.cos(Math.toRadians(fieldAngle)));
+        rect.width = (int) Math.round(Math.sqrt(Math.pow(b1, 2) + Math.pow(b2, 2) - 2 * b1 * b2 * Math.cos(Math.toRadians(fieldAngle))));
 
         // set height based only on beam angle (this doesn't change with the angle of the light)
         rect.height = (int) Math.round((2 * battenHeight * Math.sin(Math.toRadians(fieldAngle) / 2)) / Math.sin(Math.PI / 2 - Math.toRadians(fieldAngle) / 2));
 
         // get x location from start of beam ellipse (Pythagorean theorem)
-        rect.x = (int) Math.sqrt(Math.pow(b1, 2) - Math.pow(battenHeight, 2));
+        rect.x = (int) Math.round(Math.sqrt(Math.pow(b1, 2) - Math.pow(battenHeight, 2)));
 
         // make x negative if the angle is below 0 (square root is always positive)
         if (angle - fieldAngle / 2 < 0) rect.x = -rect.x;

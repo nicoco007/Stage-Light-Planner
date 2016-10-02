@@ -30,17 +30,21 @@ public class JLightDefinition extends JStageElementDefinition {
      */
     @Override
     protected void paintComponent(Graphics g) {
+
+        // call superclass method
         super.paintComponent(g);
 
+        // cast graphics to 2D graphics
         Graphics2D g2d = (Graphics2D)g;
 
+        // enable anti-aliasing, set the color to display color, and draw the shape
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(definition.getDisplayColor());
         PaintHelper.drawShape(g2d, definition.getShape(), 0, 0, getWidth(), getHeight());
 
+        // set the color & font & draw the label
         g2d.setColor(PaintHelper.getHueBasedOnBackgroundColor(definition.getDisplayColor()));
         g2d.setFont(g2d.getFont().deriveFont(50.0f));
-
         PaintHelper.drawScaledString(g2d, definition.getLabel(), 0, 0, getWidth(), getHeight(), 5);
     }
 

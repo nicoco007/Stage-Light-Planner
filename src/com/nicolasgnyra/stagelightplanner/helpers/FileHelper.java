@@ -186,6 +186,7 @@ public class FileHelper {
             return new LightDefinition(name, label, shape, displayColor, fieldAngle);
         else
             return new LightDefinition(name, label, shape, displayColor, fieldAngleMin, fieldAngleMax);
+
     }
 
     /**

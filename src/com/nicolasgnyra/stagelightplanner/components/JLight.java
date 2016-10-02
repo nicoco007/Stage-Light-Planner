@@ -34,7 +34,7 @@ public class JLight extends JStageElement {
      * @param model Light definition
      */
     JLight(int x, int y, LightDefinition model) {
-        this(x, y, model, new Color(255, 255, 0), 0.0f, 0.0f, model.getFieldAngle() > 0 ? model.getFieldAngle() : model.getFieldAngleMax(), "", 100);
+        this(x, y, model, new Color(255, 255, 0), 0.0f, 0.0f, model.isFieldAngleRange() ? model.getFieldAngle() : model.getFieldAngleMax(), "", 100);
     }
 
     /**
@@ -140,7 +140,7 @@ public class JLight extends JStageElement {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // draw the light's shapae
-        PaintHelper.drawShape(g, getModel().getShape(), 0, 0, getWidth(), getHeight());
+        PaintHelper.drawShape(g2d, getModel().getShape(), 0, 0, getWidth(), getHeight());
 
         // check if there is a batten
         if (getOverlappingBatten() != null) {
@@ -153,6 +153,41 @@ public class JLight extends JStageElement {
 
         // disable antialiasing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+
+    }
+
+    /**
+     * equals(Object) Method:
+     * Checks whether the supplied object is equal to this instance.
+     *
+     * Input: Object to compare.
+     *
+     * Process: Compares all properties of this class.
+     *
+     * Output: Whether the objects are equal or not.
+     *
+     * @param obj Object to compare.
+     * @return Whether the objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        // check type
+        if (!(obj instanceof JLight))
+            return false;
+
+        // cast
+        JLight otherLight = (JLight) obj;
+
+        // check variables
+        return getModel().equals(otherLight.getModel()) &&
+                getRotation() == otherLight.getRotation() &&
+                getAngle() == otherLight.getAngle() &&
+                getFieldAngle() == otherLight.getFieldAngle() &&
+                getBeamColor().equals(otherLight.getBeamColor()) &&
+                getConnectionId().equals(otherLight.getConnectionId()) &&
+                getBeamIntensity() == otherLight.getBeamIntensity() &&
+                super.equals(obj);
 
     }
 

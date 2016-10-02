@@ -118,6 +118,39 @@ public class LightDefinition implements Cloneable {
         return getFieldAngle() == 0 && 0 < getFieldAngleMin() && getFieldAngleMin() <= getFieldAngleMax() && getFieldAngleMax() <= 180;
     }
 
+    /**
+     * equals(Object) Method:
+     * Checks whether the supplied object is equal to this instance.
+     *
+     * Input: Object to compare.
+     *
+     * Process: Compares all properties of this class.
+     *
+     * Output: Whether the objects are equal or not.
+     *
+     * @param obj Object to compare.
+     * @return Whether the objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        // check type
+        if (!(obj instanceof LightDefinition))
+            return false;
+
+        // cast
+        LightDefinition otherLightDefinition = (LightDefinition) obj;
+
+        // check variables
+        return getDisplayName().equals(otherLightDefinition.getDisplayName()) &&
+                getLabel().equals(otherLightDefinition.getLabel()) &&
+                getShape().equals(otherLightDefinition.getShape()) &&
+                getDisplayColor().equals(otherLightDefinition.getDisplayColor()) &&
+                getFieldAngle() == otherLightDefinition.getFieldAngle() &&
+                getFieldAngleMin() == otherLightDefinition.getFieldAngleMin() &&
+                getFieldAngleMax() == otherLightDefinition.getFieldAngleMax();
+    }
+
     public String getDisplayName() {
         return displayName;
     }

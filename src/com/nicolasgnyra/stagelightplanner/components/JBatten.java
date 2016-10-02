@@ -77,6 +77,18 @@ public class JBatten extends JStageElement {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof JBatten))
+            return false;
+
+        JBatten otherBatten = (JBatten) obj;
+
+        return getHeightFromFloor() == otherBatten.getHeightFromFloor() &&
+                getLength() == otherBatten.getLength() &&
+                super.equals(obj);
+    }
+
     public Orientation getOrientation() {
         return orientation;
     }

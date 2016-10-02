@@ -91,14 +91,14 @@ public class JPreviewPane extends JPanel {
             // enable anti-aliasing, get field angle & draw beam
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             float fieldAngle = lightDefinition.isFieldAngleRange() ? lightDefinition.getFieldAngleMax() : lightDefinition.getFieldAngle();
-            PaintHelper.drawBeam(g2d, x, y, size, size, fieldAngle, 75, Color.yellow, 100, 90, 40, true);
+            PaintHelper.drawBeam(g2d, x, y, size, size, fieldAngle, 75, Color.yellow, 100, 90, 120 - fieldAngle, true);
 
             // set color & font
             g2d.setColor(lightDefinition.getDisplayColor());
             g2d.setFont(g2d.getFont().deriveFont(Font.PLAIN));
 
             // draw shape
-            PaintHelper.drawShape(g, lightDefinition.getShape(), x, y, size, size);
+            PaintHelper.drawShape(g2d, lightDefinition.getShape(), x, y, size, size);
 
             // set color & draw scaled ID string
             g2d.setColor(PaintHelper.getHueBasedOnBackgroundColor(lightDefinition.getDisplayColor()));

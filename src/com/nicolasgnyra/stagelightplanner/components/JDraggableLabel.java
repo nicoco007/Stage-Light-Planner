@@ -171,6 +171,37 @@ public class JDraggableLabel extends JStageElement {
 
     }
 
+    /**
+     * equals(Object) Method:
+     * Checks whether the supplied object is equal to this instance.
+     *
+     * Input: Object to compare.
+     *
+     * Process: Compares all properties of this class.
+     *
+     * Output: Whether the objects are equal or not.
+     *
+     * @param obj Object to compare.
+     * @return Whether the objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object obj) {
+
+        // check type
+        if (!(obj instanceof JDraggableLabel))
+            return false;
+
+        // cast
+        JDraggableLabel otherLabel = (JDraggableLabel) obj;
+
+        // check variables
+        return getText().equals(otherLabel.getText()) &&
+                getFontSize() == otherLabel.getFontSize() &&
+                getFontFamily().equals(otherLabel.getFontFamily()) &&
+                super.equals(obj);
+
+    }
+
     void setText(String text) {
         this.text = text;
         propertyUpdated();

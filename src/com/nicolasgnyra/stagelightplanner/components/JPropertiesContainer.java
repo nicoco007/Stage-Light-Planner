@@ -31,7 +31,7 @@ public class JPropertiesContainer extends JPanel {
      *
      * Process: Creates the default components to display.
      *
-     * Output: None.
+     * Output: A new instance of the JPropertiesContainer class.
      */
     public JPropertiesContainer() {
 
@@ -53,7 +53,6 @@ public class JPropertiesContainer extends JPanel {
         titleLabel.setFont(defaultLabelFont.deriveFont(Font.BOLD, 24));
         titleLabel.setDisabledTextColor(Color.black);
         titleLabel.setBackground(null);
-        titleLabel.setAlignmentY(JLabel.BOTTOM_ALIGNMENT);
 
         // add labels to header panel
         headerPanel.add(titleLabel, BorderLayout.NORTH);
@@ -95,7 +94,7 @@ public class JPropertiesContainer extends JPanel {
         setDefaultTitle();
 
         // empty properties form
-        propertiesPanel.removeAll();
+        propertiesPanel.empty();
 
         // show properties based on sender element
         if (element instanceof JLight)
@@ -152,7 +151,7 @@ public class JPropertiesContainer extends JPanel {
     private void showLightProperties(final JLight light) {
 
         // set title
-        setTitle("Light", new String[] { light.getModel().getDisplayName(), "Beam Angle: " + (light.getModel().getFieldAngle() > 0 ? light.getModel().getFieldAngle() : light.getModel().getFieldAngleMin() + " - " + light.getModel().getFieldAngleMax()) + "°" });
+        setTitle("Light", new String[] { light.getModel().getDisplayName(), "Beam Angle: " + (light.getModel().isFieldAngleRange() ? light.getModel().getFieldAngle() : light.getModel().getFieldAngleMin() + " - " + light.getModel().getFieldAngleMax()) + "°" });
 
         // add fields
         propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation(value.floatValue()), -360.00, 360.00, 11.25, 2);
@@ -160,11 +159,11 @@ public class JPropertiesContainer extends JPanel {
 
         // if light field angle is range, add field angle input
         if (light.getModel().isFieldAngleRange())
-            propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle((float)((double)value)), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 0.1, 1);
+            propertiesPanel.addNumberField("Field Angle (degrees):", light.getFieldAngle(), value -> light.setFieldAngle(value.floatValue()), light.getModel().getFieldAngleMin(), light.getModel().getFieldAngleMax(), 0.1, 1);
 
         // add rest of fields
         propertiesPanel.addColorField("Beam Color:", light.getBeamColor(), light::setBeamColor);
-        propertiesPanel.addSlider("Beam Intensity: ", light.getBeamIntensity(), 0, 100, 10, 20, light::setBeamIntensity);
+        propertiesPanel.addSliderField("Beam Intensity: ", light.getBeamIntensity(), 0, 100, 10, 20, light::setBeamIntensity);
         propertiesPanel.addTextField("Connection ID:", light.getConnectionId(), light::setConnectionId);
     }
 
