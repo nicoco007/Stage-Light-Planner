@@ -62,7 +62,7 @@ public class JBatten extends JStageElement {
      *
      * Process: Calculates the size of the batten & fills in according to focus state.
      *
-     * Output: None.
+     * Output: Painted element.
      *
      * @param g Graphics class used to draw the window.
      */

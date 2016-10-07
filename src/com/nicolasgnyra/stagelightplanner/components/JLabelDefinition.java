@@ -40,7 +40,7 @@ public class JLabelDefinition extends JStageElementDefinition {
      *
      * Process: Draws a scaled string that reads 'Label'.
      *
-     * Output: None.
+     * Output: Painted component.
      *
      * @param g Graphics class used to draw the window.
      */

@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * FileStreamReader Class
+ * FileStreamReader Class:
  * Helper methods for the FileInputStream class.
  *
  * Date: 2016-09-27

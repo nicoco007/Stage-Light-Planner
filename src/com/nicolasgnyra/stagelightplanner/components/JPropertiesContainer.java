@@ -84,7 +84,7 @@ public class JPropertiesContainer extends JPanel {
      *
      * Process: Clears the form and adds the necessary fields.
      *
-     * Output: None.
+     * Output: Properties in form.
      *
      * @param element Element of which to show the properties.
      */
@@ -120,7 +120,7 @@ public class JPropertiesContainer extends JPanel {
      *
      * Process: Creates necessary fields in the form component.
      *
-     * Output: None.
+     * Output: Batten properties in form.
      *
      * @param batten Batten to use
      */
@@ -144,14 +144,14 @@ public class JPropertiesContainer extends JPanel {
      *
      * Process: Creates necessary fields in the form component.
      *
-     * Output: None.
+     * Output: Light properties in form.
      *
      * @param light Light to use
      */
     private void showLightProperties(final JLight light) {
 
         // set title
-        setTitle("Light", new String[] { light.getModel().getDisplayName(), "Beam Angle: " + (light.getModel().isFieldAngleRange() ? light.getModel().getFieldAngle() : light.getModel().getFieldAngleMin() + " - " + light.getModel().getFieldAngleMax()) + "°" });
+        setTitle("Light", new String[] { light.getModel().getDisplayName(), "Beam Angle: " + (light.getModel().isFieldAngleRange() ? light.getModel().getFieldAngleMin() + " - " + light.getModel().getFieldAngleMax() : light.getFieldAngle()) + "°" });
 
         // add fields
         propertiesPanel.addNumberField("Rotation (degrees):", light.getRotation(), value -> light.setRotation(value.floatValue()), -360.00, 360.00, 11.25, 2);
@@ -175,7 +175,7 @@ public class JPropertiesContainer extends JPanel {
      *
      * Process: Creates necessary fields in the form component.
      *
-     * Output: None.
+     * Output: Label properties in form.
      *
      * @param label Label to use
      */

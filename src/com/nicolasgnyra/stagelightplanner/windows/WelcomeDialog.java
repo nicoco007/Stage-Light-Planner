@@ -33,6 +33,7 @@ class WelcomeDialog extends JDialog {
 
         // call superclass constructor with supplied parent & as application modal
         super(owner, ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // set title & prevent resizing
         setTitle("Welcome to Stage Light Planner!");
@@ -44,11 +45,11 @@ class WelcomeDialog extends JDialog {
         // create title label, set font, and add to content pane
         JLabel titleLabel = new JLabel("Welcome to Stage Light Planner!");
         titleLabel.setFont(titleLabel.getFont().deriveFont(24f));
-        contentPane.add(titleLabel, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0));
+        contentPane.add(titleLabel, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 1, 1, 0, 0, false, false, new Insets(0, 0, 20, 0)));
 
         // create buttons panel & set its preferred size
         JPanel buttons = new JPanel(new GridLayout(2, 1));
-        buttons.setPreferredSize(new Dimension(150, 92));
+        buttons.setPreferredSize(new Dimension(75 * 2, 46 * 2));
 
         // add "new" button
         buttons.add(new JActionButton("Create a new plan", e -> {

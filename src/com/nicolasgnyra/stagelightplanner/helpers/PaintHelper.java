@@ -135,6 +135,9 @@ public class PaintHelper {
         if (point > 0 && point < size) {
 
             // calculate displacement
+            // based on the distance between the edges and the min/max locations, stretches the current point towards
+            // either side so that the "displacement factor" is 1 when point == min or point == max and 0 when
+            // point == (min + max) / 2
             double displMin = Math.round(min * (point - min) / (size - min));
             double displMax = Math.round((size - max) * (max - point) / max);
 
@@ -156,7 +159,7 @@ public class PaintHelper {
      *
      * Process: Draws based on specified shape.
      *
-     * Output: None.
+     * Output: Drawn shape on the specified graphics instance.
      *
      * @param g Graphics instance
      * @param shape Shape to draw
@@ -244,7 +247,7 @@ public class PaintHelper {
      *
      * Process: Scales the font appropriately and draws a centered string.
      *
-     * Output: None.
+     * Output: Drawn string on the specified graphics instance.
      *
      * @param g2d Graphics instance
      * @param text Text
@@ -335,7 +338,7 @@ public class PaintHelper {
      *
      * Process: Gets the beam rectangle, transforms (rotates) it, and draws it.
      *
-     * Output: None.
+     * Output: Drawn beam on the specified graphics instance.
      *
      * @param g2d Graphics instance.
      * @param lightX Light X position
@@ -360,7 +363,7 @@ public class PaintHelper {
 
         // create & rotate transform according to user input
         AffineTransform transform = new AffineTransform();
-        transform.rotate(-Math.toRadians(rotation) + Math.PI / 2, lightX + lightWidth / 2, lightY + lightHeight / 2);
+        transform.rotate(Math.PI / 2 - Math.toRadians(rotation), lightX + lightWidth / 2, lightY + lightHeight / 2);
 
         // set color according to user input (add 50% opacity)
         g2d.setColor(color);

@@ -26,6 +26,7 @@ public class UnitTests {
     @Test
     public void polygonsShouldStretchToBoundsProperly() {
 
+        // get polygons with 3-10 sides at different angles
         assertEquals(new Rectangle(50, 50), PaintHelper.getRegularPolygon(3, 0, 0, 50, 50).getBounds());
         assertEquals(new Rectangle(50, 50), PaintHelper.getRegularPolygon(4, 0, 0, 50, 50, 22.5).getBounds());
         assertEquals(new Rectangle(50, 50), PaintHelper.getRegularPolygon(5, 0, 0, 50, 50, 45).getBounds());
@@ -67,7 +68,10 @@ public class UnitTests {
         // save & load & delete file
         FileHelper.saveStagePlan(stagePlan, saveLocation);
         StagePlan loadedStagePlan = FileHelper.loadStagePlan(saveLocation);
-        saveLocation.delete();
+
+        // make sure we delete the file
+        if (!saveLocation.delete())
+            System.out.println("Could not delete test file!");
 
         // assert
         assertEquals(stagePlan, loadedStagePlan);

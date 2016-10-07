@@ -43,7 +43,7 @@ public class FormElement <T extends JComponent> {
      *
      * Process: Sets the visibility of both components.
      *
-     * Output: None.
+     * Output: Visible/invisible components.
      *
      * @param visible Whether to show or hide the components.
      */

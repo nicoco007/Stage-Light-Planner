@@ -8,6 +8,11 @@ import java.awt.*;
 /**
  * JLight Class:
  * A draggable stage element that has a rotation, angle, and beam.
+ *
+ * Date: 2016-09-27
+ *
+ * @author Nicolas Gnyra
+ * @version 1.0
  */
 public class JLight extends JStageElement {
 
@@ -34,7 +39,7 @@ public class JLight extends JStageElement {
      * @param model Light definition
      */
     JLight(int x, int y, LightDefinition model) {
-        this(x, y, model, new Color(255, 255, 0), 0.0f, 0.0f, model.isFieldAngleRange() ? model.getFieldAngle() : model.getFieldAngleMax(), "", 100);
+        this(x, y, model, new Color(255, 255, 0), 0.0f, 0.0f, model.isFieldAngleRange() ? model.getFieldAngleMax() : model.getFieldAngle(), "", 100);
     }
 
     /**
@@ -111,7 +116,7 @@ public class JLight extends JStageElement {
      *
      * Process: Draws the light's shape with the defined color, the connection ID, and the tooltip.
      *
-     * Output: None.
+     * Output: Painted element.
      *
      * @param g Graphics class used to draw the window.
      */

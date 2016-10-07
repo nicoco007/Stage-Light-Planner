@@ -20,7 +20,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * GridBagLayoutHelper Class
+ * GridBagLayoutHelper Class:
  * Contains static methods to easily add components to GridBagLayouts
  *
  * Date: 2016-09-27
@@ -31,14 +31,14 @@ import java.awt.*;
 public class GridBagLayoutHelper {
 
     /**
-     * getGridBagLayoutConstraints(int, int) Method
+     * getGridBagLayoutConstraints(int, int) Method:
      * Adds a component to a GridBagLayout using the specified values.
      *
      * Input: X and y coordinates.
      *
      * Process: Calls the overloads method.
      *
-     * Output: None.
+     * Output: Generated GridBagConstraints class.
      *
      * @param x Grid column
      * @param y Grid row
@@ -51,14 +51,14 @@ public class GridBagLayoutHelper {
     }
 
     /**
-     * getGridBagLayoutConstraints(int, int, int) Method
+     * getGridBagLayoutConstraints(int, int, int) Method:
      * Adds a component to a GridBagLayout using the specified values.
      *
      * Input: X and y coordinates, anchor.
      *
      * Process: Calls the overloads method.
      *
-     * Output: None.
+     * Output: Generated GridBagConstraints class.
      *
      * @param x Grid column
      * @param y Grid row
@@ -72,7 +72,7 @@ public class GridBagLayoutHelper {
     }
 
     /**
-     * getGridBagLayoutConstraints(int, int, int, int, int, double, double, boolean, boolean) Method
+     * getGridBagLayoutConstraints(int, int, int, int, int, double, double, boolean, boolean) Method:
      * Adds a component to a GridBagLayout using the specified values.
      *
      * Input: X and y coordinates, anchor, grid width and height, horizontal and vertical weight,
@@ -80,7 +80,7 @@ public class GridBagLayoutHelper {
      *
      * Process: Calls the overloads method.
      *
-     * Output: None.
+     * Output: Generated GridBagConstraints class.
      *
      * @param x Grid column
      * @param y Grid row
@@ -102,7 +102,7 @@ public class GridBagLayoutHelper {
     }
 
     /**
-     * getGridBagLayoutConstraints(int, int, int, int, int, double, double, boolean, boolean, Insets) Method
+     * getGridBagLayoutConstraints(int, int, int, int, int, double, double, boolean, boolean, Insets) Method:
      * Adds a component to a GridBagLayout using the specified values.
      *
      * Input: X and y coordinates, anchor, grid width and height, horizontal and vertical weight,
@@ -111,7 +111,7 @@ public class GridBagLayoutHelper {
      *
      * Process: Creates new GridBagConstraints, sets the specified values, and returns it.
      *
-     * Output: None.
+     * Output: Generated GridBagConstraints class.
      *
      * @param x Grid column
      * @param y Grid row

@@ -15,8 +15,14 @@ import java.awt.event.ActionListener;
 public class JActionButton extends JButton {
 
     /**
-     * JActionButton(String, ActionListener) Constructor
+     * JActionButton(String, ActionListener) Constructor:
      * Creates a new instance of the JActionButton class with the specified text and action listener.
+     *
+     * Input: Button text & action listener.
+     *
+     * Process: Calls superclass constructor & adds action listener.
+     *
+     * Output: A new instance of the JActionButton class.
      *
      * @param text Button text
      * @param actionListener Action listener

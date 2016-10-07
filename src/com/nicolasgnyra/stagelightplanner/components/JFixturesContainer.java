@@ -27,7 +27,7 @@ public class JFixturesContainer extends JPanel {
      *
      * Process: Sets up the panel's components.
      *
-     * Output: None.
+     * Output: A new instance of the JFixtureContainer class.
      */
     public JFixturesContainer() {
 
@@ -52,7 +52,7 @@ public class JFixturesContainer extends JPanel {
      *
      * Process: Removes all components from the light definition container.
      *
-     * Output: None.
+     * Output: Empty definitions container.
      */
     public void clear() {
         definitionContainer.removeAll();
@@ -66,7 +66,7 @@ public class JFixturesContainer extends JPanel {
      *
      * Process: Adds the specified element and repaints & revalidates the container.
      *
-     * Output: None.
+     * Output: New element in the definitions container.
      *
      * @param stageElementDefinition JStageElementDefinition to add to the container.
      */
@@ -84,7 +84,7 @@ public class JFixturesContainer extends JPanel {
      *
      * Process: Calls addElement() with a new JLightDefinition.
      *
-     * Output: None.
+     * Output: New light in the definitions container.
      *
      * @param def Light definition to add.
      */

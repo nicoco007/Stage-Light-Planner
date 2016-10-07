@@ -40,7 +40,7 @@ public class FileHelper {
      *
      * Process: Converts lights list to bytes and saves them to the file.
      *
-     * Output: None.
+     * Output: File with written light definitions.
      *
      * @param lights List of lights.
      * @param file Target file.
@@ -120,7 +120,7 @@ public class FileHelper {
      *
      * Process: Writes all values to file.
      *
-     * Output: None.
+     * Output: Light definition written to writer.
      *
      * @param writer File stream writer.
      * @param light Light definition.
@@ -197,7 +197,7 @@ public class FileHelper {
      *
      * Process: Saves light definitions & actual stage elements.
      *
-     * Output: None.
+     * Output: File with written stage plan.
      *
      * @param stagePlan Stage plan
      * @param file Target file
@@ -264,7 +264,7 @@ public class FileHelper {
                 writer.write(STAGE_ELEMENT_LIGHT);
 
                 // write index of light definition
-                writer.writeInt(lightDefinitions.indexOf(light.getModel()));
+                writer.writeInt(find(lightDefinitions, light.getModel()));
 
                 // write field angle
                 writer.writeFloat(light.getFieldAngle());
@@ -424,6 +424,33 @@ public class FileHelper {
 
         // return stage plan
         return new StagePlan(stageElements);
+
+    }
+
+    /**
+     * find(ArrayList<T>, T) Method:
+     * Finds the specified value in the specified array. Returns -1 if not found.
+     *
+     * Input: ArrayList to search & value to find.
+     *
+     * Process: Uses sequential search to find the specified value.
+     *
+     * Output: Index of value or -1 if not found.
+     *
+     * @param list ArrayList to search
+     * @param value Value to find
+     * @param <T> Value type
+     * @return Index of value or -1 if not found.
+     */
+    private static <T> int find(ArrayList<T> list, T value) {
+
+        // iterate through values, compare current element to specified value, return index if equal
+        for (int i = 0; i < list.size(); i++)
+            if (list.get(i) == value)
+                return i;
+
+        // return -1 if nothing was found
+        return -1;
 
     }
 

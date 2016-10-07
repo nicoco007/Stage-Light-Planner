@@ -47,6 +47,7 @@ class FixtureEditorDialog extends JDialog {
 
         // call superclass constructor with specified owner & application modality type
         super(owner, ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         // set title
         setTitle("Fixture Editor");
@@ -77,11 +78,13 @@ class FixtureEditorDialog extends JDialog {
         // create add and remove buttons
         JActionButton addButton = new JActionButton("+", e -> addNewFixture());
         JActionButton removeButton = new JActionButton("-", e -> removeSelectedFixture());
+        JActionButton sortButton = new JActionButton("Sort", e -> sort());
 
         // add table & buttons to left container
-        leftContainer.add(table, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 2, 1, 1.0f, 1.0f, true, true));
-        leftContainer.add(addButton, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 1, GridBagConstraints.EAST, 1, 1, 1.0f, 0, false, false));
-        leftContainer.add(removeButton, GridBagLayoutHelper.getGridBagLayoutConstraints(1, 1, GridBagConstraints.EAST, 1, 1, 0, 0, false, false));
+        leftContainer.add(table, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 0, GridBagConstraints.CENTER, 3, 1, 1.0f, 1.0f, true, true));
+        leftContainer.add(sortButton, GridBagLayoutHelper.getGridBagLayoutConstraints(0, 1, GridBagConstraints.WEST, 1, 1, 0, 0, false, false));
+        leftContainer.add(addButton, GridBagLayoutHelper.getGridBagLayoutConstraints(1, 1, GridBagConstraints.EAST, 1, 1, 1.0f, 0, false, false));
+        leftContainer.add(removeButton, GridBagLayoutHelper.getGridBagLayoutConstraints(2, 1, GridBagConstraints.EAST, 1, 1, 0, 0, false, false));
 
         // create right container & set layout to box layout on Y axis
         JPanel rightContainer = new JPanel();
@@ -116,6 +119,47 @@ class FixtureEditorDialog extends JDialog {
         // pack window
         pack();
 
+        // center on top of owner
+        setLocationRelativeTo(owner);
+
+    }
+
+    /**
+     * sort() Method:
+     * Sorts the fixture list by display name.
+     *
+     * Input: None.
+     *
+     * Process: Uses the selection sort algorithm to sort the light definitions.
+     *
+     * Output: Sorted fixture list.
+     */
+    private void sort() {
+
+        // define smallest
+        int smallest;
+
+        // iterate through all elements
+        for (int i = 0; i < lightDefinitions.size(); i++) {
+
+            // set smallest to current element
+            smallest = i;
+
+            // iterate through remaining elements, and if current element is smaller than stored smallest, update smallest value
+            for (int j = i; j < lightDefinitions.size(); j++)
+                if (lightDefinitions.get(j).getDisplayName().compareTo(lightDefinitions.get(smallest).getDisplayName()) < 0)
+                    smallest = j;
+
+            // swap values
+            LightDefinition temp = lightDefinitions.get(i);
+            lightDefinitions.set(i, lightDefinitions.get(smallest));
+            lightDefinitions.set(smallest, temp);
+
+        }
+
+        // reload fixtures list
+        reloadFixtureList();
+
     }
 
     /**
@@ -126,7 +170,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Retrieves the selected fixture from the list and loads its information into the form.
      *
-     * Output: None.
+     * Output: Fixture properties in the form.
      *
      * @param index Index of the fixture in the list.
      */
@@ -230,7 +274,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Adds a fixture to the list and selects it in the JTable.
      *
-     * Output: None.
+     * Output: New fixture in list.
      */
     private void addNewFixture() {
         addFixtureToList(new LightDefinition("New Light", "Light", LightShape.SQUARE, Color.black, 40.0f));
@@ -245,7 +289,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Gets the current selected index in the JTable, and removes the fixture at that index from the list.
      *
-     * Output: None.
+     * Output: Removed fixture.
      */
     private void removeSelectedFixture() {
         int index = table.getSelectedRow();
@@ -260,7 +304,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Empties and fills the JTable with the list of light definitions.
      *
-     * Output: None.
+     * Output: Fixture names in the list.
      */
     private void reloadFixtureList() {
 
@@ -284,7 +328,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Adds the light definition to the list and adds a row to the JTable.
      *
-     * Output: None.
+     * Output: Specified fixture added to list.
      *
      * @param lightDefinition Light definition to add to the list.
      */
@@ -309,7 +353,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: Removes the light definition and the row at that index.
      *
-     * Output: None.
+     * Output: Removed fixture.
      *
      * @param index Index at which to remove the definition.
      */
@@ -332,7 +376,7 @@ class FixtureEditorDialog extends JDialog {
      *
      * Process: sets the value of the row at the specified index to the specified string.
      *
-     * Output: None.
+     * Output: Updated name in fixture list.
      *
      * @param index Index to update.
      * @param name Replacement name.

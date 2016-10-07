@@ -7,9 +7,30 @@ import com.nicolasgnyra.stagelightplanner.transferables.StageElementTransferable
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 
+/**
+ * JLightDefinition Class:
+ * A LightDefinition container that can be displayed in a JFixturesContainer instance.
+ *
+ * Date: 2016-09-27
+ *
+ * @author Nicolas Gnyra
+ * @version 1.0
+ */
 public class JLightDefinition extends JStageElementDefinition {
     private final LightDefinition definition;
 
+    /**
+     * JLightDefinition(LightDefinition) Constructor:
+     * Creates a new instance of the JLightDefinition class.
+     *
+     * Input: A LightDefinition instance to use as a model.
+     *
+     * Process: Calls superclass constructor & sets definition & tooltip text
+     *
+     * Output: A new instance of the JLightDefinition class.
+     *
+     * @param definition A LightDefinition instance to use as a model.
+     */
     public JLightDefinition(LightDefinition definition) {
         super();
         this.definition = definition;
@@ -24,7 +45,7 @@ public class JLightDefinition extends JStageElementDefinition {
      *
      * Process: Draws a representation of the light definition with the label (short name) of the light on top.
      *
-     * Output: None.
+     * Output: Painted component.
      *
      * @param g Graphics class used to draw the window.
      */

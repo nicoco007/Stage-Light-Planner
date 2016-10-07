@@ -39,7 +39,7 @@ public class JBattenDefinition extends JStageElementDefinition {
      *
      * Process: Fills a slim gray horizontal rectangle that represents a batten.
      *
-     * Output: None.
+     * Output: Painted component.
      *
      * @param g Graphics class used to draw the window.
      */

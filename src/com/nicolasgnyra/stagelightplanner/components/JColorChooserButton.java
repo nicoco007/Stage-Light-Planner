@@ -31,7 +31,7 @@ class JColorChooserButton extends JButton {
      *
      * Process: Creates a JColorChooser dialog that is displayed when the button is pressed.
      *
-     * Output: None.
+     * Output: A new instance of the JColorChooserButton class.
      *
      * @param initialColor Initial chooser color.
      */
@@ -107,7 +107,7 @@ class JColorChooserButton extends JButton {
      *
      * Process: Add the specified listener to the list of listeners.
      *
-     * Output: None.
+     * Output: New listener in list of listeners.
      *
      * @param listener Listener to add.
      */

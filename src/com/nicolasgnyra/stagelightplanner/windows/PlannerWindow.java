@@ -7,11 +7,15 @@ import com.nicolasgnyra.stagelightplanner.helpers.ExceptionHelper;
 import com.nicolasgnyra.stagelightplanner.helpers.FileHelper;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -25,10 +29,11 @@ import java.util.ArrayList;
  */
 public class PlannerWindow extends JFrame implements WindowListener {
 
-    private File loadedFile = null;                         // currently loaded file
-    private final JStagePlanner stagePlanner;               // stage planner
-    private final JFixturesContainer fixtureList;           // fixtures container
-    private ArrayList<LightDefinition> lightDefinitions;    // list of light definitions
+    private File loadedFile = null;                                                                     // currently loaded file
+    private final JStagePlanner stagePlanner;                                                           // stage planner
+    private final JFixturesContainer fixtureList;                                                       // fixtures container
+    private ArrayList<LightDefinition> lightDefinitions = new ArrayList<LightDefinition>();             // list of light definitions
+    private FileFilter stagePlanFileFilter = new FileNameExtensionFilter("Stage Plan Files", "slpsp");  // stage plan file filter
 
     /**
      * PlannerWindow() Constructor:
@@ -42,7 +47,7 @@ public class PlannerWindow extends JFrame implements WindowListener {
      */
     public PlannerWindow() {
 
-        // set title & default closing operation (prevents exiting with unsaved chnages)
+        // set title & default closing operation (prevents exiting with unsaved changes)
         setTitle("Stage Light Planner");
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -52,6 +57,7 @@ public class PlannerWindow extends JFrame implements WindowListener {
         // create file & tools menus
         JMenu fileMenu = new JMenu("File");
         JMenu toolsMenu = new JMenu("Tools");
+        JMenu helpMenu = new JMenu("Help");
 
         // add items to file menu
         fileMenu.add(new JActionMenuItem("New",         e -> clear(),       KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK)));
@@ -64,9 +70,16 @@ public class PlannerWindow extends JFrame implements WindowListener {
         // add fixture editor to tools
         toolsMenu.add(new JActionMenuItem("Fixture Editor", e -> showFixtureEditor()));
 
+        // add help options to help menu
+        helpMenu.add(new JActionMenuItem("Quick Start", e -> showQuickStart()));
+        helpMenu.addSeparator();
+        helpMenu.add(new JActionMenuItem("Online Help", e -> openUrl("https://nicoco007.github.io/Stage-Light-Planner/")));
+        helpMenu.add(new JActionMenuItem("Report a Bug", e -> openUrl("https://github.com/nicoco007/Stage-Light-Planner/issues")));
+
         // add menus to menu bar
         menuBar.add(fileMenu);
         menuBar.add(toolsMenu);
+        menuBar.add(helpMenu);
 
         // set window menu bar
         setJMenuBar(menuBar);
@@ -159,11 +172,60 @@ public class PlannerWindow extends JFrame implements WindowListener {
         // create the dialog
         FixtureEditorDialog dialog = new FixtureEditorDialog(this, lightDefinitions);
 
-        // show the dialog (this hangs because the modality type is set)
+        // show the dialog (this hangs because the modality type is set to application modal)
         dialog.setVisible(true);
 
         // reload the fixture list after dialog is closed
         reloadFixtureList();
+
+    }
+
+    /**
+     * showQuickStart() Method:
+     * Shows the quick start dialog.
+     *
+     * Input: None.
+     *
+     * Process: Creates a new instance of the QuickStartDialog class and shows it.
+     *
+     * Output: None.
+     */
+    private void showQuickStart() {
+
+        // create the dialog
+        QuickStartDialog dialog = new QuickStartDialog(this);
+
+        // show the dialog
+        dialog.setVisible(true);
+
+    }
+
+    /**
+     * openUrl(String) Method:
+     * Opens the specified URL.
+     *
+     * Input: URL to open.
+     *
+     * Process: Gets the desktop instance and browses to the specified URL.
+     *
+     * Output: Browser opened at specified URL.
+     *
+     * @param uri URL to open.
+     */
+    private void openUrl(String uri) {
+
+        // wrap in try/catch statement
+        try {
+
+            // attempt to browse to specified URI
+            Desktop.getDesktop().browse(new URI(uri));
+
+        } catch(Exception ex) {
+
+            // show an error dialog
+            ExceptionHelper.showErrorDialog(this, ex);
+
+        }
 
     }
 
@@ -178,12 +240,17 @@ public class PlannerWindow extends JFrame implements WindowListener {
      * Output: None.
      */
     private void reloadFixtureList() {
+
+        // clear list
         fixtureList.clear();
 
+        // add default elements
         fixtureList.addElement(new JBattenDefinition());
         fixtureList.addElement(new JLabelDefinition());
 
+        // load user defined lights
         lightDefinitions.forEach(fixtureList::addLight);
+
     }
 
     /**
@@ -231,8 +298,9 @@ public class PlannerWindow extends JFrame implements WindowListener {
         // check that there are no unsaved changes or that the user doesn't want to save his changes
         if (!stagePlanner.hasUnsavedChanges() || JOptionPane.showOptionDialog(this, "You have unsaved changes. Are you sure you want to load a plan?", "Unsaved changes", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, JOptionPane.CANCEL_OPTION) == JOptionPane.OK_OPTION) {
 
-            // create file chooser
+            // create file chooser & set filter
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(stagePlanFileFilter);
 
             // show open dialog & make sure the user selected a file
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -310,8 +378,9 @@ public class PlannerWindow extends JFrame implements WindowListener {
      */
     private boolean saveAs() {
 
-        // create file chooser
+        // create file chooser & set filter
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(stagePlanFileFilter);
 
         // prompt user to select a target location
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {

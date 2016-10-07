@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * FileStreamWriter Class
+ * FileStreamWriter Class:
  * Helper methods for the FileOutputStream class.
  *
  * Date: 2016-09-27
@@ -46,7 +46,7 @@ public class FileStreamWriter extends FileOutputStream {
      *
      * Process: Creates a byte buffer, puts the short, converts it to a byte array, and writes it.
      *
-     * Output: None.
+     * Output: Written short.
      *
      * @param s Short to write.
      * @throws IOException Thrown when an error occurs while writing.
@@ -63,7 +63,7 @@ public class FileStreamWriter extends FileOutputStream {
      *
      * Process: Creates a byte buffer, puts the integer, converts it to a byte array, and writes it.
      *
-     * Output: None.
+     * Output: Written int.
      *
      * @param i Integer to write.
      * @throws IOException Thrown when an error occurs while writing.
@@ -80,7 +80,7 @@ public class FileStreamWriter extends FileOutputStream {
      *
      * Process: Creates a byte buffer, puts the float, converts it to a byte array, and writes it.
      *
-     * Output: None.
+     * Output: Written float.
      *
      * @param f Float to write.
      * @throws IOException Thrown when an error occurs while writing.
@@ -97,7 +97,7 @@ public class FileStreamWriter extends FileOutputStream {
      *
      * Process: Writes the string.
      *
-     * Output: None.
+     * Output: Written string.
      *
      * @param str String to write.
      * @throws IOException Thrown when an error occurs while writing.
@@ -114,7 +114,7 @@ public class FileStreamWriter extends FileOutputStream {
      *
      * Process: Writes the string with the specified charset.
      *
-     * Output: None.
+     * Output: Written string.
      *
      * @param str String to write.
      * @param charset Charset to use when writing.

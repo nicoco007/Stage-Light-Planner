@@ -38,7 +38,7 @@ public class JForm extends JPanel {
      *
      * Process: Calls the superclass constructor with a new GridBag layout.
      *
-     * Output: None.
+     * Output: A new instance of the JForm class.
      */
     public JForm() {
         super(new GridBagLayout());
@@ -99,10 +99,10 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addTextField(String, String, Consumer<String>) Method:
+     * addTextField(String, String, Consumer<String>, boolean) Method:
      * Adds a text field to the form.
      *
-     * Input: Label text, starting value, update consumer.
+     * Input: Label text, starting value, update consumer, whether the input is multi-line or not.
      *
      * Process: Add the label, field, and registers the consumer to the input's listener.
      *
@@ -247,7 +247,7 @@ public class JForm extends JPanel {
      * addColorField(String, Color, Consumer<Color>) Method:
      * Adds a color selection field to the form.
      *
-     * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
+     * Input: Label text, starting color, update consumer.
      *
      * Process: Add the label, field, and registers the consumer to the input's listener.
      *
@@ -283,10 +283,10 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addComboBoxField(String, double, Consumer<Double>, double, double, double, int) Method:
+     * addComboBoxField(String, String[], T[], T, Consumer<T>) Method:
      * Adds a combo box to the form.
      *
-     * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
+     * Input: Label text, labels, values, selected value, update consumer.
      *
      * Process: Add the label, field, and registers the consumer to the input's listener.
      *
@@ -350,10 +350,10 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addCheckBoxField(String, double, Consumer<Double>, double, double, double, int) Method:
+     * addCheckBoxField(String, boolean, Consumer<Boolean>) Method:
      * Adds a check box to the form.
      *
-     * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
+     * Input: Label text, starting value, update consumer.
      *
      * Process: Add the label, field, and registers the consumer to the input's listener.
      *
@@ -389,10 +389,11 @@ public class JForm extends JPanel {
     }
 
     /**
-     * addSliderField(String, double, Consumer<Double>, double, double, double, int) Method:
+     * addSliderField(String, Integer, Integer, Integer, int, int, Consumer<Integer>) Method:
      * Adds a slider to the form.
      *
-     * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places.
+     * Input: Label text, starting value, update consumer, minimum value, maximum value, step & decimal places, minor &
+     * major tick interval.
      *
      * Process: Add the label, field, and registers the consumer to the input's listener.
      *
@@ -462,7 +463,7 @@ public class JForm extends JPanel {
      *
      * Process: Removes all components and revalidates & repaints the panel.
      *
-     * Output: None.
+     * Output: Empty JForm.
      */
     public void empty() {
         removeAll();
@@ -495,7 +496,7 @@ public class JForm extends JPanel {
      *
      * Process: Adds the specified change listener to the list.
      *
-     * Output: None.
+     * Output: New color listener in the listeners list.
      *
      * @param changeListener Change listener to add.
      */

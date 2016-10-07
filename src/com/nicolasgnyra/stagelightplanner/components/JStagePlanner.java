@@ -34,7 +34,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
     private static final int largeCellMultiplier = 10;  // large cell size, multiplier of cellSize
 
     private final JScrollPane scrollPane;       // drawing pane scroll pane
-    private final JLayeredPane drawingPane;     // graphics container
+    private final DrawingPane drawingPane;     // graphics container
     private Point dragOrigin = null;            // drag origin (for scroll pane)
 
     private final int acceptableDnDActions = DnDConstants.ACTION_COPY;    // acceptable drag and drop actions
@@ -156,7 +156,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      *
      * Process: Set unsaved changes to true, set stage element parent, add to drawing pane, request inner focus, repaint, reposition
      *
-     * Output: None.
+     * Output: New stage element in the planner.
      *
      * @param stageElement JStageElement to add.
      */
@@ -188,7 +188,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      *
      * Process: Adds the JBatten & sets the layer.
      *
-     * Output: None.
+     * Output: New batten in the planner.
      *
      * @param batten JBatten to add.
      */
@@ -205,7 +205,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      *
      * Process: Adds the JLight & sets the layer.
      *
-     * Output: None.
+     * Output: New light in the planner.
      *
      * @param light JLight to add.
      */
@@ -222,7 +222,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
      *
      * Process: Adds the JDraggableLabel & sets the layer.
      *
-     * Output: None.
+     * Output: New label in the planner.
      *
      * @param label JDraggableLabel to add.
      */
@@ -488,6 +488,8 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
          *
          * Process: Sets the layout & preferred size.
          *
+         * Output: A new instance of the DrawingPane class.
+         *
          * @param width Width
          * @param height Height
          */
@@ -531,7 +533,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
          *
          * Process: Draws cells & light beams if the light is on top of a batten.
          *
-         * Output: None.
+         * Output: Painted component.
          *
          * @param g Graphics instance.
          */
@@ -579,7 +581,7 @@ public class JStagePlanner extends JPanel implements MouseListener, MouseMotionL
                 // get batten on top of which the light currently is
                 JBatten overlappingBatten = light.getOverlappingBatten();
 
-                // if the batten was found
+                // if the batten was found, draw the beam
                 if (overlappingBatten != null) {
 
                     PaintHelper.drawBeam(g2d, light.getX(), light.getY(), light.getWidth(), light.getHeight(), light.getFieldAngle(), (int) (overlappingBatten.getHeightFromFloor() * getZoom()), light.getBeamColor(), light.getBeamIntensity(), light.getRotation(), light.getAngle(), showLightOutlines);

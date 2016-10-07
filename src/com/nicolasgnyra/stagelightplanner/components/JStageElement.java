@@ -36,7 +36,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
      *
      * Process: Depends on the extended class.
      *
-     * Output: None.
+     * Output: Painted element.
      *
      * @param g Graphics instance.
      */
@@ -158,7 +158,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
      *
      * Process: Calls setSize() and setLocation().
      *
-     * Output: None.
+     * Output: Repositioned component.
      */
     void reposition() {
         setSize(width, height);
@@ -173,7 +173,7 @@ public abstract class JStageElement extends JComponent implements MouseListener,
      *
      * Process: Calls the superclass method, paints the component, and calls reposition().
      *
-     * Output: None.
+     * Output: Painted component.
      *
      * @param g Graphics instance.
      */

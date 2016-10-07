@@ -17,6 +17,13 @@ public class ExceptionHelper {
     /**
      * showErrorDialog(Component, Exception) Method:
      * Shows an error dialog with the details of the exception.
+     *
+     * Input: Parent component & exception.
+     *
+     * Process: Creates and shows a message dialog containing the exception's message and stack trace.
+     *
+     * Output: Shown error dialog.
+     *
      * @param parent Dialog's parent component
      * @param ex Exception
      */

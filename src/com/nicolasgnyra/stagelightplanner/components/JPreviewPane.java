@@ -47,7 +47,7 @@ public class JPreviewPane extends JPanel {
      *
      * Process: If the light definition is set, displays the light and its beam.
      *
-     * Output: None.
+     * Output: Painted component.
      *
      * @param g Graphics instance.
      */
@@ -91,7 +91,7 @@ public class JPreviewPane extends JPanel {
             // enable anti-aliasing, get field angle & draw beam
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             float fieldAngle = lightDefinition.isFieldAngleRange() ? lightDefinition.getFieldAngleMax() : lightDefinition.getFieldAngle();
-            PaintHelper.drawBeam(g2d, x, y, size, size, fieldAngle, 75, Color.yellow, 100, 90, 120 - fieldAngle, true);
+            PaintHelper.drawBeam(g2d, x, y, size, size, fieldAngle, 75, Color.yellow, 100, 90, 35, true);
 
             // set color & font
             g2d.setColor(lightDefinition.getDisplayColor());
@@ -119,7 +119,7 @@ public class JPreviewPane extends JPanel {
      *
      * Process: Sets the light definition & repaints the component.
      *
-     * Output: None.
+     * Output: Painted representation of the specified light definition, if any.
      *
      * @param lightDefinition Light definition to set.
      */
